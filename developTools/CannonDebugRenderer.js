@@ -1,7 +1,5 @@
-import * as BaseTHREE from 'three';
+import * as THREE from 'three.js';
 import * as CANNON from 'cannon';
-
-export const THREE = BaseTHREE;
 
 /* global CANNON,THREE,Detector */
 
@@ -9,11 +7,13 @@ export const THREE = BaseTHREE;
 /**
  * Adds Three.js primitives into the scene where all the Cannon bodies and shapes are.
  * @class CannonDebugRenderer
- * @param {THREE.Scene} scene
+ * @param {CannonDebugRenderer.js.Scene} scene
  * @param {CANNON.World} world
  * @param {object} [options]
  */
-THREE.CannonDebugRenderer = function (scene, world, options) {
+//THREE.CannonDebugRenderer = () => {}
+
+export const CannonDebugRenderer = function (scene, world, options) {
   options = options || {};
 
   this.scene = scene;
@@ -28,7 +28,9 @@ THREE.CannonDebugRenderer = function (scene, world, options) {
   this._cylinderGeometry = new THREE.CylinderGeometry(1, 1, 10, 10);
 };
 
-THREE.CannonDebugRenderer.prototype = {
+// THREE.CannonDebugRenderer.prototype
+
+export const DebugProto = {
   tmpVec0: new CANNON.Vec3(),
   tmpVec1: new CANNON.Vec3(),
   tmpVec2: new CANNON.Vec3(),

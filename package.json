@@ -14,9 +14,10 @@
     "three.js": "^0.77.1"
   },
   "devDependencies": {
+    "@three-ts/orbit-controls": "^1.4.7",
     "@types/cannon": "^0.1.8",
-    "@types/uuid": "^8.3.3",
     "@types/three": "^0.137.0",
+    "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "~4.28.3",
     "@typescript-eslint/parser": "~4.28.3",
     "cache-loader": "^4.1.0",

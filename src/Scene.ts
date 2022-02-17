@@ -3,15 +3,16 @@ import { PerspectiveCamera, WebGLRenderer, Scene as BaseScene, Object3D, Color }
 
 export class Scene {
   private canvas: HTMLCanvasElement;
-  private camera: PerspectiveCamera;
-  private renderer: WebGLRenderer;
+  public camera: PerspectiveCamera;
+  public renderer: WebGLRenderer;
   public scene: BaseScene;
 
   constructor() {
     this.canvas = document.querySelector('#root') as HTMLCanvasElement;
 
-    this.camera = new THREE.PerspectiveCamera(75, 2, 0.1, 5);
-    this.camera.position.z = 4;
+    this.camera = new THREE.PerspectiveCamera(75, 2, 0.1, 20);
+    this.camera.position.z = 9;
+    this.camera.position.y = 4;
 
     this.renderer = this.createRenderer(this.canvas);
 
