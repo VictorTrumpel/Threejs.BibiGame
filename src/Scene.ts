@@ -45,13 +45,11 @@ export class Scene {
   }
 
   private createScene() {
-    const scene = new THREE.Scene();
-    scene.background = new Color('skyblue');
-    return scene;
+    return new THREE.Scene();
   }
 
   private createRenderer(canvas: HTMLCanvasElement) {
-    const renderer = new THREE.WebGLRenderer({ canvas });
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
     renderer.shadowMap.enabled = true;
     return renderer;
   }

@@ -24,6 +24,6 @@
     "allowUnreachableCode": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
-    "jsx": "react"
+    "baseUrl": "."
   }
 }
