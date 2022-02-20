@@ -1,44 +1,35 @@
 import * as THREE from 'three';
 import { Object3D, Group } from 'three';
 
-import { Scene } from './app/Scene';
+import { ColorWorld } from './app/ColorWorld';
 import * as CANNON from 'cannon-es';
 import CannonDebugRenderer from './utils/cannonDebugRenderer';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import GLTFSoldier from './models/Soldier.glb';
+import soldier from './models/Soldier.glb';
 import { OrbitControls } from '@three-ts/orbit-controls';
 import * as TWEEN from '@tweenjs/tween.js';
+import { Ground } from './app/Ground';
 
 window.onload = () => {
   let model: Group;
 
-  let mixer: THREE.AnimationMixer;
-  let idleAction: THREE.AnimationAction, walkAction: THREE.AnimationAction, runAction: THREE.AnimationAction;
-  let actions: THREE.AnimationAction[];
-
-  const clock = new THREE.Clock();
-
-  const scene = new Scene();
-  const raycaster = new THREE.Raycaster();
+  // let mixer: THREE.AnimationMixer;
+  // let idleAction: THREE.AnimationAction, walkAction: THREE.AnimationAction, runAction: THREE.AnimationAction;
+  // let actions: THREE.AnimationAction[];
 
   window.addEventListener('mousedown', onMouseDown, false);
 
-  const planeGeometry = new THREE.PlaneGeometry(10, 10);
-  const planeMaterial = new THREE.MeshBasicMaterial({ color: 'brown', side: THREE.DoubleSide });
-  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-  plane.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+  const clock = new THREE.Clock();
 
-  scene.add(plane);
+  const scene = new ColorWorld();
+  const raycaster = new THREE.Raycaster();
+
+  const ground = new Ground();
+
+  scene.add(ground);
 
   const dirLight = new THREE.DirectionalLight(0xffffff);
   dirLight.position.set(-1, 4, -10);
-  dirLight.castShadow = true;
-  dirLight.shadow.camera.top = 2;
-  dirLight.shadow.camera.bottom = -2;
-  dirLight.shadow.camera.left = -2;
-  dirLight.shadow.camera.right = 2;
-  dirLight.shadow.camera.near = 0.1;
-  dirLight.shadow.camera.far = 40;
   scene.add(dirLight);
 
   const world = new CANNON.World();
@@ -59,65 +50,67 @@ window.onload = () => {
   world.addBody(cylinderBody);
 
   const controls = new OrbitControls(scene.camera, scene.renderer.domElement);
-  controls.update();
   controls.enableDamping = true;
 
   const cannonDebug = new CannonDebugRenderer(scene.scene, world);
 
   const loader = new GLTFLoader();
-  loader.load(GLTFSoldier, (gltf) => {
+  loader.load(soldier, (gltf) => {
     model = gltf.scene;
 
     scene.add(model);
 
-    const skeleton = new THREE.SkeletonHelper(model);
-    skeleton.visible = false;
-    scene.add(skeleton);
+    console.log('quar3: ', model.quaternion);
 
-    const animations = gltf.animations;
-
-    console.log(animations);
-
-    mixer = new THREE.AnimationMixer(model);
-
-    idleAction = mixer.clipAction(animations[0]);
-    walkAction = mixer.clipAction(animations[3]);
-    runAction = mixer.clipAction(animations[1]);
-
-    actions = [idleAction, walkAction, runAction];
-
-    activateAllActions();
+    // const skeleton = new THREE.SkeletonHelper(model);
+    // skeleton.visible = false;
+    // scene.add(skeleton);
+    //
+    // const animations = gltf.animations;
+    //
+    // console.log(animations);
+    //
+    // mixer = new THREE.AnimationMixer(model);
+    //
+    // idleAction = mixer.clipAction(animations[0]);
+    // walkAction = mixer.clipAction(animations[3]);
+    // runAction = mixer.clipAction(animations[1]);
+    //
+    // actions = [idleAction, walkAction, runAction];
+    //
+    // activateAllActions();
   });
 
-  function activateAllActions() {
-    setWeight(idleAction, 0);
-    setWeight(walkAction, 0);
-    setWeight(runAction, 1);
+  console.log('Q3: ', cylinderBody.quaternion);
 
-    actions?.forEach(function (action: THREE.AnimationAction) {
-      action.play();
-    });
-  }
+  // function activateAllActions() {
+  //   setWeight(idleAction, 0);
+  //   setWeight(walkAction, 0);
+  //   setWeight(runAction, 1);
+  //
+  //   actions?.forEach(function (action: THREE.AnimationAction) {
+  //     action.play();
+  //   });
+  // }
 
-  function setWeight(action: THREE.AnimationAction, weight: number) {
-    action.enabled = true;
-    action.setEffectiveTimeScale(1);
-    action.setEffectiveWeight(weight);
-  }
+  // function setWeight(action: THREE.AnimationAction, weight: number) {
+  //   action.enabled = true;
+  //   action.setEffectiveTimeScale(1);
+  //   action.setEffectiveWeight(weight);
+  // }
 
   loop();
 
   function loop() {
-    world.step(1 / 60);
-    world.step(1 / 60);
-
     console.log();
 
     let mixerUpdateDelta = clock.getDelta();
 
-    if (mixer) {
-      mixer.update(mixerUpdateDelta);
-    }
+    world.step(mixerUpdateDelta);
+
+    // if (mixer) {
+    //   mixer.update(mixerUpdateDelta);
+    // }
 
     if (model) {
       model.position.z = cylinderBody.position.z;
