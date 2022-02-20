@@ -1,71 +1,46 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ProgressPlugin = require('progress-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const path = require('path')
 
 module.exports = {
   mode: 'development',
-  entry: './index.ts',
+  entry: './src/main.ts',
   devServer: {
-    watchFiles: path.resolve(__dirname, 'build'),
     port: 9000,
-    historyApiFallback: {
-      index: 'index.html',
-    },
-    proxy: {
-      'http://localhost:9000/:id': {
-        bypass: (req, res) =>
-          res.send({
-            mssg: 'proxy server - TEST proxy',
-          }),
-      },
-    },
+    static: {
+      serveIndex: true,
+      directory: __dirname
+    }
   },
-  watch: true,
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build'),
-    clean: true,
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/dist/'
+  },
+  resolve: {
+    extensions: ['.ts', '.js']
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: [
-          {
-            loader: 'cache-loader',
-            options: {
-              cacheDirectory: path.resolve(__dirname, 'node_modules/.cache/cache-loader'),
-            },
-          },
-          'ts-loader',
-          {
-            options: { eslintPath: require.resolve('eslint') },
-            loader: require.resolve('eslint-loader'),
-          },
-        ],
-        exclude: /node_modules/,
+        test: /\.ts$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       },
       {
-        test: /\.html$/i,
-        loader: 'html-loader',
-      },
-    ],
+        test: /\.(glb|gltf)$/,
+        use:
+          [
+            {
+              loader: 'file-loader',
+              options:
+                {
+                  outputPath: 'assets/models/'
+                }
+            }
+          ]
+      }
+    ]
   },
-  optimization: {
-    flagIncludedChunks: true,
-    innerGraph: false,
-    minimize: true,
-    minimizer: [new TerserPlugin()],
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'title',
-      template: 'index.html',
-    }),
-    new ProgressPlugin(true),
-  ],
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
-  },
-};
+  watchOptions: {
+    ignored: /node_modules/
+  }
+}

@@ -1,29 +1,12 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "rootDir": ".",
-    "pretty": true,
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowJs": true,
-    "importHelpers": true,
-    "target": "es6",
-    "module": "esnext",
-    "strict": true,
     "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+      "es2015",
+      "dom"
     ],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": true,
-    "noFallthroughCasesInSwitch": true,
+    "target": "es6",
     "noImplicitAny": true,
-    "baseUrl": "."
+    "module": "commonjs",
+    "strict": true
   }
 }

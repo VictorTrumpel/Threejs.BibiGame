@@ -1,49 +1,29 @@
 {
-  "name": "controllercharacter",
+  "name": "typescript-webpack-threejs-template",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
   "scripts": {
-    "dev": " node server.js --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "webpack serve",
+    "start:open": "webpack serve --open",
+    "build": "webpack --mode=production",
+    "lint": "eslint \"**/*.ts\""
   },
   "dependencies": {
+    "@three-ts/orbit-controls": "^1.4.7",
     "@tweenjs/tween.js": "^18.6.4",
-    "cannon": "^0.6.2",
-    "progress-webpack-plugin": "^1.0.12",
-    "three.js": "^0.77.1"
+    "cannon-es": "^0.19.0",
+    "three": "~0.134.0"
   },
   "devDependencies": {
-    "@three-ts/orbit-controls": "^1.4.7",
-    "@types/cannon": "^0.1.8",
-    "@types/three": "^0.137.0",
-    "@types/uuid": "^8.3.3",
-    "@typescript-eslint/eslint-plugin": "~4.28.3",
-    "@typescript-eslint/parser": "~4.28.3",
-    "cache-loader": "^4.1.0",
-    "dotenv-webpack": "^7.0.3",
+    "@types/three": "^0.134.0",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
     "eslint": "^7.32.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "8.1.0",
-    "eslint-import-resolver-typescript": "^2.4.0",
-    "eslint-loader": "^4.0.2",
-    "eslint-plugin-cypress": "^2.10.3",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jsx-a11y": "6.4.1",
-    "eslint-plugin-prettier": "^3.4.0",
-    "html-loader": "^3.1.0",
-    "html-webpack-plugin": "^5.5.0",
-    "lint-staged": "^12.1.2",
-    "nodemon": "^2.0.15",
-    "prettier": "^2.3.2",
-    "terser-webpack-plugin": "^5.3.1",
-    "ts-loader": "^4.4.2",
-    "typescript": "^4.5.2",
-    "webpack": "^5.65.0",
+    "file-loader": "^6.2.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.4.4",
+    "webpack": "^5.64.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.6.0"
-  },
-  "author": "",
-  "license": "ISC"
+    "webpack-dev-server": "^4.4.0",
+    "prettier": "^2.3.2"
+  }
 }
