@@ -1,16 +1,16 @@
-import { Mesh, Quaternion, Vector3 } from 'three';
+import { Group, Mesh, Quaternion, Vector3 } from 'three';
 import { Body as PhysicalBody } from 'objects/Body';
 
 export class Body {
-  public skin: Mesh;
+  public skin: Group | Mesh;
   public physique: PhysicalBody;
 
-  constructor(skin: Mesh, physique: PhysicalBody) {
+  constructor(skin: Group | Mesh, physique: PhysicalBody) {
     this.skin = skin;
     this.physique = physique;
   }
 
-  private bindSkinToPhysics() {
+  public bindSkinToPhysics() {
     const { skin, physique } = this;
 
     skin.position.copy(new Vector3(...Object.values(physique.position)));
@@ -18,8 +18,6 @@ export class Body {
   }
 
   public update(timer: number) {
-    console.log(timer);
-
     this.bindSkinToPhysics();
   }
 }

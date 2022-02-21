@@ -8,14 +8,14 @@ import { Body } from './Body';
 
 export class World {
   public colorWorld: ColorWorld = new ColorWorld();
-  public physicsWorld: PhysicsWorld = new PhysicsWorld();
-  public clock: Clock = new Clock();
+  private physicsWorld: PhysicsWorld = new PhysicsWorld();
+  private clock: Clock = new Clock();
 
   private worldBodies: Body[] = [];
 
   // For DEBUG
-  private orbitControl = new OrbitControls(this.colorWorld.camera, this.colorWorld.renderer.domElement);
-  private cannonDebug = new CannonDebugRenderer(this.colorWorld.scene, this.physicsWorld);
+  private orbitControl: OrbitControls = new OrbitControls(this.colorWorld.camera, this.colorWorld.renderer.domElement);
+  private cannonDebug: CannonDebugRenderer = new CannonDebugRenderer(this.colorWorld.scene, this.physicsWorld);
 
   constructor() {
     this.physicsWorld.gravity.set(0, -9.8, 0);
@@ -31,15 +31,12 @@ export class World {
     worldBodies.push(body);
   }
 
-  preload(): void {}
-
   start(): void {
-    this.preload();
     this.loop();
   }
 
-  loop(): void {
-    const { clock, orbitControl, physicsWorld, colorWorld, loop, cannonDebug, worldBodies } = this;
+  private loop(): void {
+    const { clock, worldBodies, orbitControl, cannonDebug, physicsWorld, colorWorld } = this;
 
     const time = clock.getDelta();
 
@@ -55,6 +52,6 @@ export class World {
     cannonDebug.update();
 
     // HOLD LOOP
-    requestAnimationFrame(loop);
+    requestAnimationFrame(this.loop.bind(this));
   }
 }
