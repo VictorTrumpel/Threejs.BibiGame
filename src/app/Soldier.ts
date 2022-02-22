@@ -50,11 +50,15 @@ export class Soldier extends Body {
 
   private static getPhysical(): PhysicalBody {
     const vec3 = new Vec3(0.4, 0.8, 0.4);
-    return new CANNON.Body({
+    const body = new CANNON.Body({
       mass: 92,
       position: new CANNON.Vec3(0, 5, 0),
       shape: new CANNON.Box(vec3),
     });
+
+    body.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), -Math.PI);
+
+    return body;
   }
 
   private activateAllActions() {
@@ -73,11 +77,25 @@ export class Soldier extends Body {
     action.setEffectiveWeight(weight);
   }
 
+  public rund() {
+    this.setWeight(this.runAction, 1);
+    this.setWeight(this.idleAction, 0);
+  }
+
+  public rotate(y: number) {
+    this.physique.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / y);
+  }
+
+  public stop() {
+    this.setWeight(this.runAction, 0);
+    this.setWeight(this.idleAction, 1);
+  }
+
   public bindSkinToPhysics() {
     const { skin, physique } = this;
 
     const vector = new Vector3(...Object.values(physique.position));
-    vector.y /= -100;
+    vector.y /= -1000;
 
     skin.position.copy(vector);
     skin.quaternion.copy(new Quaternion(...Object.values(physique.quaternion)));

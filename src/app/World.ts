@@ -8,7 +8,7 @@ import { Body } from './Body';
 
 export class World {
   public colorWorld: ColorWorld = new ColorWorld();
-  private physicsWorld: PhysicsWorld = new PhysicsWorld();
+  public physicsWorld: PhysicsWorld = new PhysicsWorld();
   private clock: Clock = new Clock();
 
   private worldBodies: Body[] = [];

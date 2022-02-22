@@ -3,20 +3,24 @@ import soldierModel from './models/Soldier.glb';
 import { Ground } from './app/Ground';
 import { Soldier } from './app/Soldier';
 import { World } from './app/World';
-import { Raycaster, Object3D, Vector2 } from 'three';
+import { Raycaster, Object3D, Vector2, Vector3 } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
+import { Vec3 } from 'cannon-es';
+import { ThreeLine } from './app/Line';
 
 window.onload = () => {
   let soldier: Soldier;
 
+  const loader = new GLTFLoader();
   const world = new World();
   const ground = new Ground();
+
+  const helperLines = new ThreeLine(world);
 
   const raycaster = new Raycaster();
 
   world.addBody(ground);
 
-  const loader = new GLTFLoader();
   loader.load(soldierModel, (gltf) => {
     window.addEventListener('mousedown', onMouseDown, false);
 
@@ -29,8 +33,6 @@ window.onload = () => {
     });
 
     world.addBody(soldier);
-
-    console.log(soldier.physique.position);
   });
 
   world.start();
@@ -50,17 +52,57 @@ window.onload = () => {
       const point = intersect.point;
 
       if (element.userData.name !== 'CUBE') {
+        const angle = getAngle(point, soldier.physique.position);
+
+        const time = getTime(point, soldier.physique.position);
+
+        // soldier.rotate(getAngle(point, soldier.physique.position));
+        soldier.rund();
         new TWEEN.Tween(soldier.physique.position)
           .to(
             {
               x: point.x,
               z: point.z,
             },
-            500
+            time
           )
-          .start();
+          .start()
+          .onComplete(() => soldier.stop());
       }
     }
+  }
+
+  function getAngle(point: Vector3, position: Vec3) {
+    const { x: pointX, z: pointZ } = point;
+    const { x: posX, z: posZ } = position;
+
+    const composition = pointX * posX + pointZ * posZ;
+    const lengthPoint = Math.sqrt(Math.pow(pointX, 2) + Math.pow(pointZ, 2));
+    const lengthPos = Math.sqrt(Math.pow(posX, 2) + Math.pow(posZ, 2));
+
+    return composition / (lengthPoint + lengthPos);
+  }
+
+  function getTime(point: Vector3, position: Vec3): number {
+    console.log('point: ', point);
+    console.log('position: ', position);
+
+    const pointL = new Vector2(point.x, point.z).length();
+    const posL = new Vector2(position.x, position.z).length();
+
+    // console.log('pointL: ', pointL);
+    // console.log('posL: ', posL);
+
+    const length = new Vector2(point.x, point.z).length() - new Vector2(position.x, position.z).length();
+
+    const time = Math.abs(length / 200) * 100000;
+
+    // console.log('time: ', time);
+    // console.log('length: ', length);
+    //
+    // console.log('-------------');
+
+    return time;
   }
 
   // let model: Group;

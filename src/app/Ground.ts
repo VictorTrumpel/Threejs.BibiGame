@@ -6,7 +6,7 @@ import * as CANNON from 'cannon-es';
 export class Ground extends Body {
   constructor() {
     const planeGeometry = new THREE.PlaneGeometry(10, 10);
-    const planeMaterial = new THREE.MeshBasicMaterial({ color: 'brown', side: THREE.DoubleSide });
+    const planeMaterial = new THREE.MeshBasicMaterial({ color: 'white', side: THREE.DoubleSide });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 
