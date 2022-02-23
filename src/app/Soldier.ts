@@ -51,12 +51,12 @@ export class Soldier extends Body {
   private static getPhysical(): PhysicalBody {
     const vec3 = new Vec3(0.4, 0.8, 0.4);
     const body = new CANNON.Body({
-      mass: 92,
+      mass: 5000,
       position: new CANNON.Vec3(0, 5, 0),
       shape: new CANNON.Box(vec3),
     });
 
-    body.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), -Math.PI);
+    // body.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), -Math.PI);
 
     return body;
   }
@@ -83,7 +83,7 @@ export class Soldier extends Body {
   }
 
   public rotate(y: number) {
-    this.physique.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / y);
+    this.physique.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), y);
   }
 
   public stop() {

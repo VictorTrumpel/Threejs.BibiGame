@@ -1,4 +1,3 @@
-import { Vector3, Mesh } from 'three';
 import * as THREE from 'three';
 import { World } from './World';
 import { Vec3 } from 'cannon-es';
