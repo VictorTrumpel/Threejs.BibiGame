@@ -1,6 +1,5 @@
 import { Body } from './Body';
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import soldier from '../models/Soldier.glb';
+
 import {
   Group,
   Mesh,
@@ -9,6 +8,7 @@ import {
   AnimationAction,
   AnimationClip,
   Vector3,
+  LineBasicMaterial,
   Quaternion,
 } from 'three';
 import { Body as PhysicalBody } from 'objects/Body';
@@ -77,16 +77,20 @@ export class Soldier extends Body {
     action.setEffectiveWeight(weight);
   }
 
-  public rund() {
+  public run() {
     this.setWeight(this.runAction, 1);
     this.setWeight(this.idleAction, 0);
   }
 
-  public rotate(y: number) {
-    this.physique.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), y);
+  public rotate(quaternion: Quaternion) {
+    this.skin.quaternion.copy(quaternion);
   }
 
   public stop() {
+    console.log(this.runAction);
+
+    this.runAction.fadeOut(600);
+
     this.setWeight(this.runAction, 0);
     this.setWeight(this.idleAction, 1);
   }
@@ -98,7 +102,9 @@ export class Soldier extends Body {
     vector.y /= -1000;
 
     skin.position.copy(vector);
-    skin.quaternion.copy(new Quaternion(...Object.values(physique.quaternion)));
+
+    // TODO:// maybe don't need at this an we will round ontly THREE.js skin
+    // skin.quaternion.copy(new Quaternion(...Object.values(physique.quaternion)));
   }
 
   public update(timer: number) {

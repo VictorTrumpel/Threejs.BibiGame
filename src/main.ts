@@ -7,6 +7,7 @@ import { Raycaster, Object3D, Vector2, Vector3 } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { Vec3 } from 'cannon-es';
 import { ThreeLine } from './app/Line';
+import * as THREE from 'three';
 
 window.onload = () => {
   let soldier: Soldier;
@@ -52,12 +53,13 @@ window.onload = () => {
       const point = intersect.point;
 
       if (element.userData.name !== 'CUBE') {
-        const angle = getAngle(point, soldier.physique.position);
-
         const time = getTime(point, soldier.physique.position);
 
+        const angle = createPointLine(soldier.skin.position, point);
+
         soldier.rotate(angle);
-        soldier.rund();
+
+        soldier.run();
         new TWEEN.Tween(soldier.physique.position)
           .to(
             {
@@ -81,6 +83,8 @@ window.onload = () => {
 
     const angle = pointV.angle();
 
+    console.log('Math.atan2(y,x): ', Math.atan2(position.z, position.x));
+
     console.log('angle: ', angle);
 
     const composition = pointX * posX + pointZ * posZ;
@@ -91,7 +95,7 @@ window.onload = () => {
 
     console.log('samAngle: ', samAngle);
 
-    return angle;
+    return Math.atan2(position.z, position.x);
   }
 
   function getTime(point: Vector3, position: Vec3): number {
@@ -101,5 +105,27 @@ window.onload = () => {
     const distance = pointL.distanceTo(posL);
 
     return Math.abs(distance / 200) * 100000;
+  }
+
+  function createPointLine(positionVector: Vector3, pointPosition: Vector3) {
+    const material = new THREE.LineBasicMaterial({ color: 0x0000ff });
+    const points = [];
+    points.push(positionVector);
+    points.push(pointPosition);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const line = new THREE.Line(geometry, material);
+    world.colorWorld.add(line);
+
+    console.log(line);
+
+    const cubeGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Line(cubeGeometry, cubeMaterial);
+
+    console.log(cube);
+
+    world.colorWorld.add(cube);
+
+    return line.quaternion;
   }
 };

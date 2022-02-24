@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { World } from './World';
 import { Vec3 } from 'cannon-es';
 import * as CANNON from 'cannon-es';
+import { Vector2 } from 'three';
 
 export class ThreeLine {
   constructor(world: World) {
