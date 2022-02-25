@@ -14,6 +14,7 @@ import {
 import { Body as PhysicalBody } from 'objects/Body';
 import * as CANNON from 'cannon-es';
 import { Vec3 } from 'cannon-es';
+import * as THREE from 'three';
 
 export type SoldierActions = {
   idleAction: AnimationClip;
@@ -31,6 +32,8 @@ export class Soldier extends Body {
 
   private actions: AnimationAction[];
 
+  private skinDirection: Vector3;
+
   constructor(skin: Group, actions: SoldierActions) {
     super(skin, Soldier.getPhysical());
 
@@ -45,6 +48,14 @@ export class Soldier extends Body {
 
     this.actions = [this.idleAction, this.walkAction, this.runAction];
 
+    const geometry = new THREE.BoxGeometry(0.1, 0.1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry, material);
+    cube.position.z = -1;
+    this.skin.add(cube);
+
+    this.skinDirection = new Vector3(this.skin.position.x, 0, -1);
+
     this.activateAllActions();
   }
 
@@ -52,7 +63,7 @@ export class Soldier extends Body {
     const vec3 = new Vec3(0.4, 0.8, 0.4);
     const body = new CANNON.Body({
       mass: 5000,
-      position: new CANNON.Vec3(0, 5, 0),
+      position: new CANNON.Vec3(2, 5, 3),
       shape: new CANNON.Box(vec3),
     });
 
@@ -82,13 +93,15 @@ export class Soldier extends Body {
     this.setWeight(this.idleAction, 0);
   }
 
-  public rotate(quaternion: Quaternion) {
-    this.skin.quaternion.copy(quaternion);
+  public rotate(headRY: number) {
+    const { skin, skinDirection } = this;
+
+    this.skin.rotation.y += headRY - this.skin.rotation.y;
+
+    console.log(' ------ ------ ------');
   }
 
   public stop() {
-    console.log(this.runAction);
-
     this.runAction.fadeOut(600);
 
     this.setWeight(this.runAction, 0);

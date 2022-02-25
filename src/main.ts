@@ -10,6 +10,24 @@ import { ThreeLine } from './app/Line';
 import * as THREE from 'three';
 
 window.onload = () => {
+  const mouse = {
+    x: {
+      current: 0,
+      previous: 0,
+      calc: 0,
+    },
+    y: {
+      current: 0,
+      previous: 0,
+      calc: 0,
+    },
+  };
+
+  const container = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  };
+
   let soldier: Soldier;
 
   const loader = new GLTFLoader();
@@ -24,6 +42,7 @@ window.onload = () => {
 
   loader.load(soldierModel, (gltf) => {
     window.addEventListener('mousedown', onMouseDown, false);
+    window.addEventListener('mousemove', mousemove, false);
 
     const { scene: model, animations } = gltf;
 
@@ -55,9 +74,11 @@ window.onload = () => {
       if (element.userData.name !== 'CUBE') {
         const time = getTime(point, soldier.physique.position);
 
-        const angle = createPointLine(soldier.skin.position, point);
+        const headRY = calc(mouse.x.calc, -200, 200, -Math.PI / 4, Math.PI / 4);
 
-        soldier.rotate(angle);
+        console.log('headRY: ', headRY);
+
+        soldier.rotate(headRY);
 
         soldier.run();
         new TWEEN.Tween(soldier.physique.position)
@@ -74,30 +95,6 @@ window.onload = () => {
     }
   }
 
-  function getAngle(point: Vector3, position: Vec3) {
-    const { x: pointX, z: pointZ } = point;
-    const { x: posX, z: posZ } = position;
-
-    const positinV = new Vector3(position.x, 0, position.z);
-    const pointV = new Vector2(point.x, point.z);
-
-    const angle = pointV.angle();
-
-    console.log('Math.atan2(y,x): ', Math.atan2(position.z, position.x));
-
-    console.log('angle: ', angle);
-
-    const composition = pointX * posX + pointZ * posZ;
-    const lengthPoint = Math.sqrt(Math.pow(pointX, 2) + Math.pow(pointZ, 2));
-    const lengthPos = Math.sqrt(Math.pow(posX, 2) + Math.pow(posZ, 2));
-
-    const samAngle = composition / (lengthPoint + lengthPos);
-
-    console.log('samAngle: ', samAngle);
-
-    return Math.atan2(position.z, position.x);
-  }
-
   function getTime(point: Vector3, position: Vec3): number {
     const pointL = new Vector2(point.x, point.z);
     const posL = new Vector2(position.x, position.z);
@@ -107,25 +104,19 @@ window.onload = () => {
     return Math.abs(distance / 200) * 100000;
   }
 
-  function createPointLine(positionVector: Vector3, pointPosition: Vector3) {
-    const material = new THREE.LineBasicMaterial({ color: 0x0000ff });
-    const points = [];
-    points.push(positionVector);
-    points.push(pointPosition);
-    const geometry = new THREE.BufferGeometry().setFromPoints(points);
-    const line = new THREE.Line(geometry, material);
-    world.colorWorld.add(line);
+  function mousemove(e: any) {
+    mouse.x.current = e.clientX;
+    mouse.y.current = e.clientY;
+    mouse.x.calc = mouse.x.current - container.width / 2;
+    mouse.y.calc = mouse.y.current - container.height / 2;
+  }
 
-    console.log(line);
-
-    const cubeGeometry = new THREE.BufferGeometry().setFromPoints(points);
-    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Line(cubeGeometry, cubeMaterial);
-
-    console.log(cube);
-
-    world.colorWorld.add(cube);
-
-    return line.quaternion;
+  function calc(v: number, vmin: number, vmax: number, tmin: number, tmax: number) {
+    var nv = Math.max(Math.min(v, vmax), vmin);
+    var dv = vmax - vmin;
+    var pc = (nv - vmin) / dv;
+    var dt = tmax - tmin;
+    var tv = tmin + pc * dt;
+    return tv;
   }
 };
