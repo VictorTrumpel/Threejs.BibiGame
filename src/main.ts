@@ -42,7 +42,7 @@ window.onload = () => {
 
   loader.load(soldierModel, (gltf) => {
     window.addEventListener('mousedown', onMouseDown, false);
-    window.addEventListener('mousemove', mousemove, false);
+    console.log(gltf);
 
     const { scene: model, animations } = gltf;
 
@@ -68,29 +68,30 @@ window.onload = () => {
 
     if (intersects.length > 0) {
       const intersect = intersects[0];
+
       const element: Object3D = intersect.object;
       const point = intersect.point;
 
       if (element.userData.name !== 'CUBE') {
         const time = getTime(point, soldier.physique.position);
 
-        const headRY = calc(mouse.x.calc, -200, 200, -Math.PI / 4, Math.PI / 4);
+        const n = new THREE.Vector3();
+        n.copy((intersect.face as THREE.Face).normal);
+        n.transformDirection(intersect.object.matrixWorld);
 
-        console.log('headRY: ', headRY);
-
-        soldier.rotate(headRY);
-
-        soldier.run();
-        new TWEEN.Tween(soldier.physique.position)
-          .to(
-            {
-              x: point.x,
-              z: point.z,
-            },
-            time
-          )
-          .start()
-          .onComplete(() => soldier.stop());
+        soldier.rotate(point);
+        //
+        // soldier.run();
+        // new TWEEN.Tween(soldier.physique.position)
+        //   .to(
+        //     {
+        //       x: point.x,
+        //       z: point.z,
+        //     },
+        //     time
+        //   )
+        //   .start()
+        //   .onComplete(() => soldier.stop());
       }
     }
   }
@@ -102,21 +103,5 @@ window.onload = () => {
     const distance = pointL.distanceTo(posL);
 
     return Math.abs(distance / 200) * 100000;
-  }
-
-  function mousemove(e: any) {
-    mouse.x.current = e.clientX;
-    mouse.y.current = e.clientY;
-    mouse.x.calc = mouse.x.current - container.width / 2;
-    mouse.y.calc = mouse.y.current - container.height / 2;
-  }
-
-  function calc(v: number, vmin: number, vmax: number, tmin: number, tmax: number) {
-    var nv = Math.max(Math.min(v, vmax), vmin);
-    var dv = vmax - vmin;
-    var pc = (nv - vmin) / dv;
-    var dt = tmax - tmin;
-    var tv = tmin + pc * dt;
-    return tv;
   }
 };

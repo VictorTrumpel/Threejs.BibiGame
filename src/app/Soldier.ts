@@ -30,9 +30,9 @@ export class Soldier extends Body {
   private walkAction: AnimationAction;
   private runAction: AnimationAction;
 
-  private actions: AnimationAction[];
+  private cube: Mesh;
 
-  private skinDirection: Vector3;
+  private actions: AnimationAction[];
 
   constructor(skin: Group, actions: SoldierActions) {
     super(skin, Soldier.getPhysical());
@@ -50,11 +50,15 @@ export class Soldier extends Body {
 
     const geometry = new THREE.BoxGeometry(0.1, 0.1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.z = -1;
-    this.skin.add(cube);
+    this.cube = new THREE.Mesh(geometry, material);
+    this.cube.position.z = -1;
+    this.skin.add(this.cube);
 
-    this.skinDirection = new Vector3(this.skin.position.x, 0, -1);
+    const dotGeom = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+    const dotMaterial = new THREE.MeshBasicMaterial({ color: 'red' });
+    const dot = new THREE.Mesh(dotGeom, dotMaterial);
+    dot.position.z = -0.5;
+    this.cube.add(dot);
 
     this.activateAllActions();
   }
@@ -63,7 +67,7 @@ export class Soldier extends Body {
     const vec3 = new Vec3(0.4, 0.8, 0.4);
     const body = new CANNON.Body({
       mass: 5000,
-      position: new CANNON.Vec3(2, 5, 3),
+      position: new CANNON.Vec3(1, 5, 1),
       shape: new CANNON.Box(vec3),
     });
 
@@ -93,15 +97,19 @@ export class Soldier extends Body {
     this.setWeight(this.idleAction, 0);
   }
 
-  public rotate(headRY: number) {
-    const { skin, skinDirection } = this;
+  public rotate(point: Vector3) {
+    const { skin } = this;
 
-    this.skin.rotation.y += headRY - this.skin.rotation.y;
+    console.log('skin: ', skin);
+    console.log('point: ', point);
+    this.skin.lookAt(point);
 
     console.log(' ------ ------ ------');
   }
 
   public stop() {
+    console.log(this.runAction);
+
     this.runAction.fadeOut(600);
 
     this.setWeight(this.runAction, 0);

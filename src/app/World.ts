@@ -19,7 +19,7 @@ export class World {
 
   constructor() {
     this.physicsWorld.gravity.set(0, -9.8, 0);
-    this.orbitControl.enableDamping = true;
+    //this.orbitControl.enableDamping = true;
   }
 
   addBody(body: Body) {
@@ -36,7 +36,7 @@ export class World {
   }
 
   private loop(): void {
-    const { clock, worldBodies, orbitControl, cannonDebug, physicsWorld, colorWorld } = this;
+    const { clock, worldBodies, cannonDebug, physicsWorld, colorWorld } = this;
 
     const time = clock.getDelta();
 
@@ -48,7 +48,6 @@ export class World {
     worldBodies.forEach((body) => body.update(time));
 
     // For DEBUG
-    orbitControl.update();
     cannonDebug.update();
 
     // HOLD LOOP
