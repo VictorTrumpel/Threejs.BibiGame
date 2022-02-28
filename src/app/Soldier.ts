@@ -66,7 +66,7 @@ export class Soldier extends Body {
   private static getPhysical(): PhysicalBody {
     const vec3 = new Vec3(0.4, 0.8, 0.4);
     const body = new CANNON.Body({
-      mass: 5000,
+      mass: 50000,
       position: new CANNON.Vec3(1, 5, 1),
       shape: new CANNON.Box(vec3),
     });
@@ -101,8 +101,9 @@ export class Soldier extends Body {
     const { skin } = this;
 
     console.log('skin: ', skin);
-    console.log('point: ', point);
-    this.skin.lookAt(point);
+    console.log('point: ', skin.getWorldPosition(point));
+
+    this.skin.lookAt(skin.getWorldPosition(point));
 
     console.log(' ------ ------ ------');
   }

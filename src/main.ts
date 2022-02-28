@@ -1,35 +1,25 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import soldierModel from './models/Soldier.glb';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import './models/textures/Warrior_marmoset_Base_Color.png';
 import { Ground } from './app/Ground';
 import { Soldier } from './app/Soldier';
 import { World } from './app/World';
-import { Raycaster, Object3D, Vector2, Vector3 } from 'three';
-import * as TWEEN from '@tweenjs/tween.js';
+import { Raycaster, Object3D, Vector2, Vector3, AnimationClip } from 'three';
+
 import { Vec3 } from 'cannon-es';
 import { ThreeLine } from './app/Line';
 import * as THREE from 'three';
 
+import bibi from './models/bibi_gamer_anim.fbx';
+import './models/vfx_bubble_01.png';
+import textur from './models/bibi_gamer_tex.png';
+
 window.onload = () => {
-  const mouse = {
-    x: {
-      current: 0,
-      previous: 0,
-      calc: 0,
-    },
-    y: {
-      current: 0,
-      previous: 0,
-      calc: 0,
-    },
-  };
-
-  const container = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-
   let soldier: Soldier;
 
+  const fbxLoader = new FBXLoader();
+  const objLoader = new OBJLoader();
   const loader = new GLTFLoader();
   const world = new World();
   const ground = new Ground();
@@ -38,21 +28,23 @@ window.onload = () => {
 
   const raycaster = new Raycaster();
 
+  const geometry = new THREE.CylinderGeometry(1, 0, 1, 12);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const conus = new THREE.Mesh(geometry, material);
+  geometry.rotateX(Math.PI / 2);
+  conus.position.z = -1;
+  conus.position.x = -4;
+
+  world.colorWorld.add(conus);
+
   world.addBody(ground);
 
-  loader.load(soldierModel, (gltf) => {
-    window.addEventListener('mousedown', onMouseDown, false);
+  fbxLoader.load(bibi, (gltf) => {
     console.log(gltf);
-
-    const { scene: model, animations } = gltf;
-
-    soldier = new Soldier(model, {
-      idleAction: animations[0],
-      walkAction: animations[3],
-      runAction: animations[1],
-    });
-
-    world.addBody(soldier);
+    gltf.scale.x = 0.002;
+    gltf.scale.y = 0.002;
+    gltf.scale.z = 0.002;
+    world.colorWorld.add(gltf);
   });
 
   world.start();
@@ -75,11 +67,10 @@ window.onload = () => {
       if (element.userData.name !== 'CUBE') {
         const time = getTime(point, soldier.physique.position);
 
-        const n = new THREE.Vector3();
-        n.copy((intersect.face as THREE.Face).normal);
-        n.transformDirection(intersect.object.matrixWorld);
+        console.log(soldier.skin);
 
-        soldier.rotate(point);
+        soldier.skin.lookAt(point);
+        // soldier.rotate(point);
         //
         // soldier.run();
         // new TWEEN.Tween(soldier.physique.position)

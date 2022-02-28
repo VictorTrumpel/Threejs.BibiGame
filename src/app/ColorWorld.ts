@@ -12,6 +12,7 @@ export class ColorWorld {
     this.camera = new PerspectiveCamera(75, 2, 0.1, 20);
     this.camera.position.z = 7;
     this.camera.position.y = 7;
+    this.camera.lookAt(0, 0, 0);
     this.renderer = this.createRenderer(this.canvas);
 
     this.scene = this.createScene();
