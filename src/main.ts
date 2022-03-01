@@ -1,25 +1,29 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader';
 import './models/textures/Warrior_marmoset_Base_Color.png';
 import { Ground } from './app/Ground';
-import { Soldier } from './app/Soldier';
+import { Soldier, SoldierActions } from './app/Soldier';
 import { World } from './app/World';
-import { Raycaster, Object3D, Vector2, Vector3, AnimationClip } from 'three';
+import { Raycaster, Object3D, Vector2, Vector3, AnimationClip, Group, Scene } from 'three';
 
 import { Vec3 } from 'cannon-es';
 import { ThreeLine } from './app/Line';
 import * as THREE from 'three';
 
 import bibi from './models/bibi_gamer_anim.fbx';
-import './models/vfx_bubble_01.png';
-import textur from './models/bibi_gamer_tex.png';
+import bibiWalk from './models/bibi_gamer_walk.dae';
+import bibiIdle from './models/bibi_gamer_idle.dae';
+import rogue from './models/rogue_legacy_knight.glb';
+import soldierModel from './models/Soldier.glb';
+import { getLight } from './app/Light';
 
 window.onload = () => {
   let soldier: Soldier;
 
+  const animations: AnimationClip[] = [];
+
   const fbxLoader = new FBXLoader();
-  const objLoader = new OBJLoader();
   const loader = new GLTFLoader();
   const world = new World();
   const ground = new Ground();
@@ -39,13 +43,34 @@ window.onload = () => {
 
   world.addBody(ground);
 
-  fbxLoader.load(bibi, (gltf) => {
-    console.log(gltf);
-    gltf.scale.x = 0.002;
-    gltf.scale.y = 0.002;
-    gltf.scale.z = 0.002;
-    world.colorWorld.add(gltf);
+  world.colorWorld.add(getLight());
+
+  // loadAnimations();
+
+  fbxLoader.load(bibi, (fbx) => {
+    console.log(fbx);
+
+    fbx.scale.set(0.0015, 0.0015, 0.0015);
+
+    world.colorWorld.add(fbx);
   });
+
+  // loader.load(rogue, (gltf) => {
+  //   window.addEventListener('mousedown', onMouseDown, false);
+  //
+  //   const { scene: model } = gltf;
+  //
+  //   model.scale.set(0.002, 0.002, 0.002);
+  //
+  //   console.log(animations);
+  //
+  //   soldier = new Soldier(model, {
+  //     idleAction: animations[0],
+  //     runAction: animations[1],
+  //   });
+  //
+  //   world.colorWorld.add(model);
+  // });
 
   world.start();
 
@@ -67,12 +92,9 @@ window.onload = () => {
       if (element.userData.name !== 'CUBE') {
         const time = getTime(point, soldier.physique.position);
 
-        console.log(soldier.skin);
-
         soldier.skin.lookAt(point);
-        // soldier.rotate(point);
         //
-        // soldier.run();
+        soldier.run();
         // new TWEEN.Tween(soldier.physique.position)
         //   .to(
         //     {
@@ -94,5 +116,27 @@ window.onload = () => {
     const distance = pointL.distanceTo(posL);
 
     return Math.abs(distance / 200) * 100000;
+  }
+
+  function loadAnimations() {
+    let elf: Scene;
+
+    const loadingManager = new THREE.LoadingManager(function () {
+      world.colorWorld.add(elf);
+    });
+
+    const colladaLoader = new ColladaLoader(loadingManager);
+
+    colladaLoader.load(bibiIdle, (collada) => {
+      elf = collada.scene;
+      console.log(elf);
+      elf.scale.set(0.0002, 0.0002, 0.0002);
+    });
+
+    colladaLoader.load(bibiWalk, (collada) => {
+      collada.scene.scale.set(0.002, 0.002, 0.002);
+      // @ts-ignore
+      animations[1] = collada?.animations[0];
+    });
   }
 };

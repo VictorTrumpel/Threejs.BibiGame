@@ -18,7 +18,6 @@ import * as THREE from 'three';
 
 export type SoldierActions = {
   idleAction: AnimationClip;
-  walkAction: AnimationClip;
   runAction: AnimationClip;
 };
 
@@ -27,7 +26,7 @@ export class Soldier extends Body {
   private skeleton: SkeletonHelper;
 
   private idleAction: AnimationAction;
-  private walkAction: AnimationAction;
+
   private runAction: AnimationAction;
 
   private cube: Mesh;
@@ -37,16 +36,16 @@ export class Soldier extends Body {
   constructor(skin: Group, actions: SoldierActions) {
     super(skin, Soldier.getPhysical());
 
-    const { idleAction, walkAction, runAction } = actions;
+    const { idleAction, runAction } = actions;
 
     this.mixer = new AnimationMixer(skin);
     this.skeleton = new SkeletonHelper(skin);
 
     this.idleAction = this.mixer.clipAction(idleAction);
-    this.walkAction = this.mixer.clipAction(walkAction);
+
     this.runAction = this.mixer.clipAction(runAction);
 
-    this.actions = [this.idleAction, this.walkAction, this.runAction];
+    this.actions = [this.idleAction, this.runAction];
 
     const geometry = new THREE.BoxGeometry(0.1, 0.1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -78,7 +77,6 @@ export class Soldier extends Body {
 
   private activateAllActions() {
     this.setWeight(this.idleAction, 1);
-    this.setWeight(this.walkAction, 0);
     this.setWeight(this.runAction, 0);
 
     this.actions.forEach(function (action: AnimationAction) {
