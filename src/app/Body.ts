@@ -6,6 +6,8 @@ export class Body {
   public physique: PhysicalBody;
 
   constructor(skin: Group | Mesh, physique: PhysicalBody) {
+    console.log('physique: ', physique);
+
     this.skin = skin;
     this.physique = physique;
   }

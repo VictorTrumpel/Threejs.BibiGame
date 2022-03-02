@@ -1,6 +1,7 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader';
+import { TextureLoader } from 'three';
 import './models/textures/Warrior_marmoset_Base_Color.png';
 import { Ground } from './app/Ground';
 import { Soldier, SoldierActions } from './app/Soldier';
@@ -10,19 +11,16 @@ import { Raycaster, Object3D, Vector2, Vector3, AnimationClip, Group, Scene } fr
 import { Vec3 } from 'cannon-es';
 import { ThreeLine } from './app/Line';
 import * as THREE from 'three';
+import * as TWEEN from '@tweenjs/tween.js';
 
 import bibi from './models/bibi_gamer_anim.fbx';
-import bibiWalk from './models/bibi_gamer_walk.dae';
-import bibiIdle from './models/bibi_gamer_idle.dae';
-import rogue from './models/rogue_legacy_knight.glb';
-import soldierModel from './models/Soldier.glb';
+import bibiTexture from './models/bibi_gamer_tex.png';
 import { getLight } from './app/Light';
 
 window.onload = () => {
   let soldier: Soldier;
 
-  const animations: AnimationClip[] = [];
-
+  const textureLoader = new TextureLoader();
   const fbxLoader = new FBXLoader();
   const loader = new GLTFLoader();
   const world = new World();
@@ -45,32 +43,32 @@ window.onload = () => {
 
   world.colorWorld.add(getLight());
 
-  // loadAnimations();
-
   fbxLoader.load(bibi, (fbx) => {
+    window.addEventListener('mousedown', onMouseDown, false);
+    window.addEventListener('keydown', useUlt, false);
+
     console.log(fbx);
 
     fbx.scale.set(0.0015, 0.0015, 0.0015);
 
-    world.colorWorld.add(fbx);
-  });
+    const map = textureLoader.load(bibiTexture);
 
-  // loader.load(rogue, (gltf) => {
-  //   window.addEventListener('mousedown', onMouseDown, false);
-  //
-  //   const { scene: model } = gltf;
-  //
-  //   model.scale.set(0.002, 0.002, 0.002);
-  //
-  //   console.log(animations);
-  //
-  //   soldier = new Soldier(model, {
-  //     idleAction: animations[0],
-  //     runAction: animations[1],
-  //   });
-  //
-  //   world.colorWorld.add(model);
-  // });
+    fbx.children.map((child) => {
+      // @ts-ignore
+      if (child?.material?.isMeshPhongMaterial) {
+        // @ts-ignore
+        child.material.map = map;
+      }
+    });
+
+    soldier = new Soldier(fbx, {
+      idleAction: fbx.animations[4],
+      runAction: fbx.animations[2],
+      ultAction: fbx.animations[0],
+    });
+
+    world.addBody(soldier);
+  });
 
   world.start();
 
@@ -90,22 +88,30 @@ window.onload = () => {
       const point = intersect.point;
 
       if (element.userData.name !== 'CUBE') {
+        console.log('position: ', soldier.physique.position);
+
         const time = getTime(point, soldier.physique.position);
 
         soldier.skin.lookAt(point);
         //
         soldier.run();
-        // new TWEEN.Tween(soldier.physique.position)
-        //   .to(
-        //     {
-        //       x: point.x,
-        //       z: point.z,
-        //     },
-        //     time
-        //   )
-        //   .start()
-        //   .onComplete(() => soldier.stop());
+        new TWEEN.Tween(soldier.physique.position)
+          .to(
+            {
+              x: point.x,
+              z: point.z,
+            },
+            time
+          )
+          .start()
+          .onComplete(() => soldier.stop());
       }
+    }
+  }
+
+  function useUlt(e: any) {
+    if (e.code === 'Space') {
+      soldier.ult();
     }
   }
 
@@ -116,27 +122,5 @@ window.onload = () => {
     const distance = pointL.distanceTo(posL);
 
     return Math.abs(distance / 200) * 100000;
-  }
-
-  function loadAnimations() {
-    let elf: Scene;
-
-    const loadingManager = new THREE.LoadingManager(function () {
-      world.colorWorld.add(elf);
-    });
-
-    const colladaLoader = new ColladaLoader(loadingManager);
-
-    colladaLoader.load(bibiIdle, (collada) => {
-      elf = collada.scene;
-      console.log(elf);
-      elf.scale.set(0.0002, 0.0002, 0.0002);
-    });
-
-    colladaLoader.load(bibiWalk, (collada) => {
-      collada.scene.scale.set(0.002, 0.002, 0.002);
-      // @ts-ignore
-      animations[1] = collada?.animations[0];
-    });
   }
 };
