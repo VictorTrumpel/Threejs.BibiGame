@@ -1,12 +1,10 @@
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader';
 import { TextureLoader } from 'three';
 import './models/textures/Warrior_marmoset_Base_Color.png';
 import { Ground } from './app/Ground';
-import { Soldier, SoldierActions } from './app/Soldier';
+import { Soldier } from './app/Soldier';
 import { World } from './app/World';
-import { Raycaster, Object3D, Vector2, Vector3, AnimationClip, Group, Scene } from 'three';
+import { Raycaster, Object3D, Vector2, Vector3 } from 'three';
 
 import { Vec3 } from 'cannon-es';
 import { ThreeLine } from './app/Line';
@@ -22,7 +20,6 @@ window.onload = () => {
 
   const textureLoader = new TextureLoader();
   const fbxLoader = new FBXLoader();
-  const loader = new GLTFLoader();
   const world = new World();
   const ground = new Ground();
 

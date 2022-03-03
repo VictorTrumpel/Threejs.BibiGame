@@ -1,9 +1,8 @@
-import { Mesh } from 'three';
 import * as THREE from 'three';
-import { Body } from './Body';
+import { PhysicalBody } from './PhysicalBody';
 import * as CANNON from 'cannon-es';
 
-export class Ground extends Body {
+export class Ground extends PhysicalBody {
   constructor() {
     const planeGeometry = new THREE.PlaneGeometry(10, 10);
     const planeMaterial = new THREE.MeshBasicMaterial({ color: 'white', side: THREE.DoubleSide });
