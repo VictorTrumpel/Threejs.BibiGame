@@ -6,6 +6,7 @@ import { MovementBody } from './MovementBody';
 import bibiModel from '../models/bibi_gamer_anim.fbx';
 import bibiTexture from '../models/bibi_gamer_tex.png';
 import { Body } from 'objects/Body';
+import { setAnimationWeight } from '../helpers/setAnimationWeight';
 
 export enum BibiActionCode {
   // eslint-disable-next-line no-unused-vars
@@ -29,30 +30,26 @@ class BibiCharacter extends MovementBody {
     this.animations.forEach((action, idx) => {
       action.enabled = true;
       action.play();
-      if (idx === BibiActionCode.Run) {
-        action.setEffectiveWeight(0);
-        return;
-      }
-      if (idx === BibiActionCode.Idle) {
-        action.setEffectiveWeight(1);
-        return;
-      }
-      action.setEffectiveWeight(0);
-    });
-  }
 
-  private setWeight(action: AnimationAction, weight: number) {
-    action.enabled = true;
-    action.setEffectiveTimeScale(1);
-    action.setEffectiveWeight(weight);
+      switch (idx) {
+        case BibiActionCode.Run:
+          action.setEffectiveWeight(0);
+          return;
+        case BibiActionCode.Idle:
+          action.setEffectiveWeight(1);
+          return;
+        default:
+          action.setEffectiveWeight(0);
+      }
+    });
   }
 
   public run() {
     const run = this.animations[BibiActionCode.Run];
     const idle = this.animations[BibiActionCode.Idle];
 
-    this.setWeight(idle, 0);
-    this.setWeight(run, 1);
+    setAnimationWeight(idle, 0);
+    setAnimationWeight(run, 1);
 
     idle.crossFadeTo(run, 0.5, true);
   }
@@ -61,7 +58,7 @@ class BibiCharacter extends MovementBody {
     const run = this.animations[BibiActionCode.Run];
     const idle = this.animations[BibiActionCode.Idle];
 
-    this.setWeight(idle, 1);
+    setAnimationWeight(idle, 1);
 
     run.crossFadeTo(idle, 0.3, true);
   }
