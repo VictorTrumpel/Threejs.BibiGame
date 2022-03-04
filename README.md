@@ -1,4 +1,4 @@
-# THREE.js Character Controller
+# THREE.js BibiCharacter Controller
 
 A minimalistic template for Three.js projects
 

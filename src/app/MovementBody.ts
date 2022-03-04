@@ -1,11 +1,16 @@
 import { PhysicalBody } from './PhysicalBody';
 import { Vector2, Vector3 } from 'three';
-import { Tween } from '@tweenjs/tween.js';
+import * as TWEEN from '@tweenjs/tween.js';
 import { Vec3 } from 'cannon-es';
+import { Body } from 'objects/Body';
 
 export class MovementBody extends PhysicalBody {
   readonly TIME_RATIO = 1000;
-  private speed: number = 500;
+  readonly speed: number = 1.5;
+
+  constructor(physique: Body) {
+    super(physique);
+  }
 
   public moveToPoint(point: Vector3, onStop?: () => void) {
     const { skin, physique } = this;
@@ -13,10 +18,9 @@ export class MovementBody extends PhysicalBody {
 
     skin.lookAt(point);
 
-    const tween = new Tween(physique);
     const moveTime = this.getMovementTime(point, physique.position);
 
-    tween
+    new TWEEN.Tween(physique.position)
       .to({ x, z }, moveTime)
       .start()
       .onComplete(() => onStop?.());

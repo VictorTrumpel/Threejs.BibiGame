@@ -1,13 +1,16 @@
 import { Group, Mesh, Vector3 } from 'three';
 import { Body } from 'objects/Body';
+import { PreloadSkin } from '../preloaders/PreloadSkin';
+
+export type Skin = Group | Mesh;
 
 export class PhysicalBody {
   public skin: Group | Mesh;
   public physique: Body;
 
-  constructor(skin: Group | Mesh, physique: Body) {
-    this.skin = skin;
+  constructor(physique: Body, skin?: Skin) {
     this.physique = physique;
+    this.skin = skin || PreloadSkin;
   }
 
   public bindSkinToPhysics() {
@@ -16,6 +19,7 @@ export class PhysicalBody {
     skin.position.copy(new Vector3(...Object.values(physique.position)));
   }
 
+  // eslint-disable-next-line no-unused-vars
   public update(timer: number) {
     this.bindSkinToPhysics();
   }
