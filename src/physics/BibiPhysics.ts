@@ -7,6 +7,7 @@ const BibiPhysics = new Body({
   type: Body.STATIC,
   position: new Vec3(0, 0, 0),
   shape,
+  // isTrigger: true,
 });
 
 export default BibiPhysics;
