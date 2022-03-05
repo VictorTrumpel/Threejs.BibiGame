@@ -1,5 +1,5 @@
 import { PhysicalBody } from './PhysicalBody';
-import { Vector2, Vector3 } from 'three';
+import { Vector2, Vector3, Object3D, Quaternion } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { Vec3 } from 'cannon-es';
 import { Body } from 'objects/Body';
@@ -7,48 +7,55 @@ import { Body } from 'objects/Body';
 export class MovementBody extends PhysicalBody {
   readonly TIME_RATIO = 1000;
   readonly speed: number = 1.5;
-  private currentTween?: TWEEN.Tween<any>;
-  public isRunning: boolean;
+
+  private targetQuaternion?: Quaternion;
+  private positionTween?: TWEEN.Tween<any>;
 
   constructor(physique: Body) {
     super(physique);
-
-    this.isRunning = false;
   }
 
   public moveToPoint(point: Vector3, onStart?: () => void, onStop?: () => void) {
-    const { skin, physique, currentTween } = this;
+    const { physique } = this;
     const { x, z } = point;
 
-    skin.lookAt(point);
+    this.positionTween?.stop();
 
-    const moveTime = this.getMovementTime(point, physique.position);
+    this.smoothLookAt(point);
 
-    currentTween?.stop();
+    const positionTween = new TWEEN.Tween(physique.position);
 
-    const tween = new TWEEN.Tween(physique.position);
-
-    console.log();
-
-    tween
-      .to({ x, z }, moveTime)
+    positionTween
+      .to({ x, z }, this.getMovementTime(point, physique.position))
       .start()
-      .onStart(() => {
-        // console.log('curr', this.currentTween?.getId());
-        // console.log('new Tween', tween.getId());
-        onStart?.();
-      })
-      // .onStop(() => console.log('onForceStop', tween.getId()))
-      .onComplete(() => {
-        onStop?.();
-      });
+      .onStart(() => onStart?.())
+      .onComplete(() => onStop?.());
 
-    this.currentTween = tween;
+    this.positionTween = positionTween;
+  }
+
+  private smoothLookAt(point: Vector3) {
+    const { skin } = this;
+
+    const mock = new Object3D();
+
+    mock.position.copy(skin.position);
+    mock.lookAt(point);
+
+    this.targetQuaternion = mock.quaternion.clone();
   }
 
   private getMovementTime(point: Vector3, position: Vec3): number {
     const distance = new Vector2(point.x, point.z).distanceTo(new Vector2(position.x, position.z));
 
     return Math.abs(distance / this.speed) * this.TIME_RATIO;
+  }
+
+  public update(timer: number) {
+    super.update(timer);
+
+    if (this.targetQuaternion) {
+      this.skin.quaternion.slerp(this.targetQuaternion, 0.2);
+    }
   }
 }

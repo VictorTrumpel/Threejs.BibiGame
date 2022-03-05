@@ -55,15 +55,15 @@ class BibiCharacter extends MovementBody {
   }
 
   private run() {
-    if (!this.userData.isMoving) {
-      const run = this.animations[BibiActionCode.Run];
-      const idle = this.animations[BibiActionCode.Idle];
+    if (this.userData.isMoving) return;
 
-      setAnimationWeight(idle, 0);
-      setAnimationWeight(run, 1);
+    const run = this.animations[BibiActionCode.Run];
+    const idle = this.animations[BibiActionCode.Idle];
 
-      idle.crossFadeTo(run, 0.5, true);
-    }
+    setAnimationWeight(idle, 0);
+    setAnimationWeight(run, 1);
+
+    idle.crossFadeTo(run, 0.5, true);
   }
 
   private stop() {
