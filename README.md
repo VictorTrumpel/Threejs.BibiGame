@@ -2,6 +2,8 @@
 
 Adventures of Bibi on THREE.js
 
+## Move character click mouse on white plane!
+
 
 ## Installing dependencies
 
