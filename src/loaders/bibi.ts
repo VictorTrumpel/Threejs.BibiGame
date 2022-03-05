@@ -8,8 +8,6 @@ const bibi = new BibiCharacter(BibiPhysics);
   await bibi.loadModel();
   world.addBody(bibi);
 
-  console.log(bibi);
-
   // CONTROLLERS
   window.addEventListener('mousedown', bibi.moveEvent.bind(bibi), false);
 })();

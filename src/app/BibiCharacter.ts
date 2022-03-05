@@ -19,14 +19,14 @@ export enum BibiActionCode {
 }
 
 export type BibiUserData = BodyUserData & {
-  activeAction?: number;
+  isMoving?: boolean;
 };
 
 class BibiCharacter extends MovementBody {
   private mixer: AnimationMixer;
   readonly scale: number = 0.0015;
   private animations: AnimationAction[] = [];
-  readonly userData: BibiUserData;
+  private userData: BibiUserData;
 
   constructor(physique: Body) {
     super(physique);
@@ -55,13 +55,15 @@ class BibiCharacter extends MovementBody {
   }
 
   private run() {
-    const run = this.animations[BibiActionCode.Run];
-    const idle = this.animations[BibiActionCode.Idle];
+    if (!this.userData.isMoving) {
+      const run = this.animations[BibiActionCode.Run];
+      const idle = this.animations[BibiActionCode.Idle];
 
-    setAnimationWeight(idle, 0);
-    setAnimationWeight(run, 1);
+      setAnimationWeight(idle, 0);
+      setAnimationWeight(run, 1);
 
-    idle.crossFadeTo(run, 0.5, true);
+      idle.crossFadeTo(run, 0.5, true);
+    }
   }
 
   private stop() {
@@ -96,8 +98,17 @@ class BibiCharacter extends MovementBody {
   }
 
   public moveToPoint(point: Vector3) {
-    this.run();
-    super.moveToPoint(point, () => this.stop());
+    super.moveToPoint(
+      point,
+      () => {
+        this.run();
+        this.userData.isMoving = true;
+      },
+      () => {
+        this.stop();
+        this.userData.isMoving = false;
+      }
+    );
   }
 
   public moveEvent(e: MouseEvent) {
