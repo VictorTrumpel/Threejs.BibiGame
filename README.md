@@ -1,6 +1,6 @@
 # THREE.js BibiCharacter Controller
 
-A minimalistic template for Three.js projects
+Adventures of Bibi on THREE.js
 
 
 ## Installing dependencies
