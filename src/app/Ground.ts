@@ -14,6 +14,8 @@ export class Ground extends PhysicalBody {
     groundBody.addShape(groundShape);
     groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
 
+    plane.userData.isGround = true;
+
     super(groundBody, plane);
   }
 }

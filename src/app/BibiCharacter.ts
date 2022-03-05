@@ -1,5 +1,6 @@
-import { TextureLoader, AnimationAction, AnimationMixer, Vector3 } from 'three';
+import { TextureLoader, AnimationAction, AnimationMixer, Vector3, Vector2, Object3D } from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { raycaster, world } from '../main';
 
 import { MovementBody } from './MovementBody';
 
@@ -7,6 +8,8 @@ import bibiModel from '../models/bibi_gamer_anim.fbx';
 import bibiTexture from '../models/bibi_gamer_tex.png';
 import { Body } from 'objects/Body';
 import { setAnimationWeight } from '../helpers/setAnimationWeight';
+import { getMouse2DCords } from '../helpers/getMouse2DCords';
+import { BodyUserData } from './PhysicalBody';
 
 export enum BibiActionCode {
   // eslint-disable-next-line no-unused-vars
@@ -15,15 +18,22 @@ export enum BibiActionCode {
   Idle = 4,
 }
 
+export type BibiUserData = BodyUserData & {
+  activeAction?: number;
+};
+
 class BibiCharacter extends MovementBody {
   private mixer: AnimationMixer;
   readonly scale: number = 0.0015;
   private animations: AnimationAction[] = [];
+  readonly userData: BibiUserData;
 
   constructor(physique: Body) {
     super(physique);
-
     this.mixer = new AnimationMixer(this.skin);
+    this.userData = {
+      objectType: 'BibiCharacter',
+    };
   }
 
   private activateAllAnimations() {
@@ -44,7 +54,7 @@ class BibiCharacter extends MovementBody {
     });
   }
 
-  public run() {
+  private run() {
     const run = this.animations[BibiActionCode.Run];
     const idle = this.animations[BibiActionCode.Idle];
 
@@ -54,7 +64,7 @@ class BibiCharacter extends MovementBody {
     idle.crossFadeTo(run, 0.5, true);
   }
 
-  public stop() {
+  private stop() {
     const run = this.animations[BibiActionCode.Run];
     const idle = this.animations[BibiActionCode.Idle];
 
@@ -88,6 +98,18 @@ class BibiCharacter extends MovementBody {
   public moveToPoint(point: Vector3) {
     this.run();
     super.moveToPoint(point, () => this.stop());
+  }
+
+  public moveEvent(e: MouseEvent) {
+    const mouse2D = getMouse2DCords(e);
+
+    raycaster.setFromCamera(mouse2D, world.colorWorld.camera);
+    const [intersect] = raycaster.intersectObjects(world.colorWorld.scene.children, false);
+    const { object, point } = intersect || {};
+
+    if (object?.userData?.isGround) {
+      this.moveToPoint(point);
+    }
   }
 
   public update(timer: number) {

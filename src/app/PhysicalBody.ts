@@ -4,6 +4,10 @@ import { PreloadSkin } from '../preloaders/PreloadSkin';
 
 export type Skin = Group | Mesh;
 
+export type BodyUserData = {
+  objectType: string;
+};
+
 export class PhysicalBody {
   public skin: Group | Mesh;
   public physique: Body;

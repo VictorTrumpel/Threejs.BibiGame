@@ -7,6 +7,7 @@ import { Body } from 'objects/Body';
 export class MovementBody extends PhysicalBody {
   readonly TIME_RATIO = 1000;
   readonly speed: number = 1.5;
+  readonly objectType: string = 'MovementBody';
 
   constructor(physique: Body) {
     super(physique);
