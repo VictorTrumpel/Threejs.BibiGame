@@ -1,15 +1,17 @@
-import { TextureLoader, AnimationAction, AnimationMixer, Vector3, Vector2, Object3D } from 'three';
+import { TextureLoader, AnimationAction, AnimationMixer, Vector3 } from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import { raycaster, world } from '../main';
+import { raycaster } from '../../main';
 
-import { MovementBody } from './MovementBody';
+import { world } from '../worlds/World';
 
-import bibiModel from '../models/bibi_gamer_anim.fbx';
-import bibiTexture from '../models/bibi_gamer_tex.png';
+import { MovementBody } from '../bodyes/MovementBody';
+
+import bibiModel from '../../../models/bibi_gamer_anim.fbx';
+import bibiTexture from '../../../models/bibi_gamer_tex.png';
 import { Body } from 'objects/Body';
-import { setAnimationWeight } from '../helpers/setAnimationWeight';
-import { getMouse2DCords } from '../helpers/getMouse2DCords';
-import { BodyUserData } from './PhysicalBody';
+import { setAnimationWeight } from '../../helpers/setAnimationWeight';
+import { getMouse2DCords } from '../../helpers/getMouse2DCords';
+import { BodyUserData } from '../bodyes/PhysicalBody';
 
 export enum BibiActionCode {
   // eslint-disable-next-line no-unused-vars

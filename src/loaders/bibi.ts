@@ -1,6 +1,6 @@
 import BibiPhysics from '../physics/BibiPhysics';
-import BibiCharacter from '../app/BibiCharacter';
-import { world } from '../main';
+import BibiCharacter from '../environment/characters/BibiCharacter';
+import { world } from '../environment/worlds/World';
 
 const bibi = new BibiCharacter(BibiPhysics);
 

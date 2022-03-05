@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PhysicalBody } from './PhysicalBody';
+import { PhysicalBody } from '../bodyes/PhysicalBody';
 import * as CANNON from 'cannon-es';
 
 export class Ground extends PhysicalBody {

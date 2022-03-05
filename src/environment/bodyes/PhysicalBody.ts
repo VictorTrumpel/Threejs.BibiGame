@@ -1,6 +1,6 @@
 import { Group, Mesh, Vector3 } from 'three';
 import { Body } from 'objects/Body';
-import { PreloadSkin } from '../preloaders/PreloadSkin';
+import { PreloadSkin } from '../../preloaders/PreloadSkin';
 
 export type Skin = Group | Mesh;
 

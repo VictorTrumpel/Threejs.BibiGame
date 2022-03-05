@@ -1,13 +1,12 @@
 import './loaders/bibi';
 
-import './models/textures/Warrior_marmoset_Base_Color.png';
-import { Ground } from './app/Ground';
-import { World } from './app/World';
+import '../models/textures/Warrior_marmoset_Base_Color.png';
+import { Ground } from './environment/common/Ground';
+import { world } from './environment/worlds/World';
 
-import { getLight } from './app/Light';
+import { getLight } from './environment/common/Light';
 import { Raycaster } from 'three';
 
-export const world = new World();
 export const raycaster = new Raycaster();
 
 window.onload = () => {

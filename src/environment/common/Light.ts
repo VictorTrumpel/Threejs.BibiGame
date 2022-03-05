@@ -1,4 +1,4 @@
-import { Mesh, Light as BaseLight } from 'three';
+import { Light as BaseLight } from 'three';
 import * as THREE from 'three';
 
 export function getLight(): BaseLight {

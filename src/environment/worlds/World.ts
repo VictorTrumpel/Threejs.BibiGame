@@ -2,9 +2,9 @@ import { ColorWorld } from './ColorWorld';
 import { World as PhysicsWorld } from 'cannon-es';
 import { Clock } from 'three';
 import { OrbitControls } from '@three-ts/orbit-controls';
-import CannonDebugRenderer from '../utils/cannonDebugRenderer';
+import CannonDebugRenderer from '../../../utils/cannonDebugRenderer';
 import * as TWEEN from '@tweenjs/tween.js';
-import { PhysicalBody } from './PhysicalBody';
+import { PhysicalBody } from '../bodyes/PhysicalBody';
 
 export class World {
   public colorWorld: ColorWorld = new ColorWorld();
@@ -19,7 +19,6 @@ export class World {
 
   constructor() {
     this.physicsWorld.gravity.set(0, -9.8, 0);
-    //this.orbitControl.enableDamping = true;
   }
 
   addBody(body: PhysicalBody) {
@@ -48,9 +47,11 @@ export class World {
     worldBodies.forEach((body) => body.update(time));
 
     // For DEBUG
-    // cannonDebug.update();
+    cannonDebug.update();
 
     // HOLD LOOP
     requestAnimationFrame(this.loop.bind(this));
   }
 }
+
+export const world = new World();
