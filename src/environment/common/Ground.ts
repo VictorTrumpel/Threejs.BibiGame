@@ -5,7 +5,7 @@ import { Body } from 'cannon-es';
 
 export class Ground extends PhysicalBody {
   constructor() {
-    const planeGeometry = new THREE.PlaneGeometry(10, 10);
+    const planeGeometry = new THREE.PlaneGeometry(100, 100);
     const planeMaterial = new THREE.MeshBasicMaterial({ color: 'white', side: THREE.DoubleSide });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);

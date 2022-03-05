@@ -4,8 +4,9 @@ const shape = new Box(new Vec3(0.4, 0.4, 0.4));
 
 const BibiPhysics = new Body({
   mass: 100,
-  type: Body.STATIC,
+  type: Body.KINEMATIC,
   position: new Vec3(0, 0, 0),
+  velocity: new Vec3(0, 0, 0),
   shape,
   // isTrigger: true,
 });

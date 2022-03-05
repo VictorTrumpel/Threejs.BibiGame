@@ -114,6 +114,8 @@ class BibiCharacter extends MovementBody {
   }
 
   public moveEvent(e: MouseEvent) {
+    if (e.button !== 0) return;
+
     const mouse2D = getMouse2DCords(e);
 
     raycaster.setFromCamera(mouse2D, world.colorWorld.camera);
