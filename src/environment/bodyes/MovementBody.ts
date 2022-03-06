@@ -40,7 +40,7 @@ export class MovementBody extends PhysicalBody {
     this.positionTween = positionTween;
   }
 
-  private smoothLookAt(point: Vector3) {
+  public smoothLookAt(point: Vector3) {
     const { skin } = this;
 
     const mock = new Object3D();

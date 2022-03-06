@@ -20,6 +20,7 @@ export enum BibiActionCode {
   Run = 2,
   // eslint-disable-next-line no-unused-vars
   Idle = 4,
+  Attack = 6,
 }
 
 export type BibiUserData = BodyUserData & {
@@ -44,19 +45,12 @@ class BibiCharacter extends MovementBody {
 
   private activateAllAnimations() {
     this.animations.forEach((action, idx) => {
+      const actionWeight = idx === BibiActionCode.Idle ? 1 : 0;
+
       action.enabled = true;
       action.play();
 
-      switch (idx) {
-        case BibiActionCode.Run:
-          action.setEffectiveWeight(0);
-          return;
-        case BibiActionCode.Idle:
-          action.setEffectiveWeight(1);
-          return;
-        default:
-          action.setEffectiveWeight(0);
-      }
+      action.setEffectiveWeight(actionWeight);
     });
   }
 
@@ -65,7 +59,9 @@ class BibiCharacter extends MovementBody {
 
     const run = this.animations[BibiActionCode.Run];
     const idle = this.animations[BibiActionCode.Idle];
+    const attack = this.animations[BibiActionCode.Attack];
 
+    setAnimationWeight(attack, 0);
     setAnimationWeight(idle, 0);
     setAnimationWeight(run, 1);
 
@@ -76,9 +72,18 @@ class BibiCharacter extends MovementBody {
     const run = this.animations[BibiActionCode.Run];
     const idle = this.animations[BibiActionCode.Idle];
 
+    setAnimationWeight(idle, 0);
     setAnimationWeight(idle, 1);
 
     run.crossFadeTo(idle, 0.3, true);
+  }
+
+  private attack() {
+    const idle = this.animations[BibiActionCode.Idle];
+    const attack = this.animations[BibiActionCode.Attack];
+
+    setAnimationWeight(idle, 0);
+    setAnimationWeight(attack, 1);
   }
 
   public async loadModel() {
@@ -120,7 +125,12 @@ class BibiCharacter extends MovementBody {
     const { position } = object;
     const { skin, userData } = this;
 
-    if (getPointsLength(position, skin.position) <= userData.range) return;
+    this.smoothLookAt(new Vector3(position.x, 0, position.z));
+
+    if (getPointsLength(position, skin.position) <= userData.range) {
+      this.attack();
+      return;
+    }
 
     super.moveToPoint(
       new Vector3(position.x, 0, position.z),
