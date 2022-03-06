@@ -6,7 +6,7 @@ import { Body } from 'objects/Body';
 
 export class MovementBody extends PhysicalBody {
   readonly TIME_RATIO = 1000;
-  readonly speed: number = 1.5;
+  readonly speed: number = 3;
 
   private targetQuaternion?: Quaternion;
   private positionTween?: TWEEN.Tween<any>;

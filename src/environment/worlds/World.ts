@@ -28,6 +28,8 @@ export class World {
     colorWorld.scene.add(skin);
     physicsWorld.addBody(physique);
     worldBodies.push(body);
+
+    console.log(worldBodies);
   }
 
   start(): void {
