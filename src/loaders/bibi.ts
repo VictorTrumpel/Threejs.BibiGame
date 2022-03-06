@@ -9,5 +9,5 @@ const bibi = new BibiCharacter(BibiPhysics);
   world.addBody(bibi);
 
   // CONTROLLERS
-  window.addEventListener('mousedown', bibi.moveEvent.bind(bibi), false);
+  window.addEventListener('mousedown', bibi.mouseEvent.bind(bibi), false);
 })();

@@ -9,7 +9,7 @@ export class ColorWorld {
   constructor() {
     this.canvas = document.querySelector('#root') as HTMLCanvasElement;
 
-    this.camera = new PerspectiveCamera(75, 2, 0.1, 20);
+    this.camera = new PerspectiveCamera(75, 2, 0.1, 100);
     this.camera.position.z = 7;
     this.camera.position.y = 7;
     this.camera.lookAt(0, 0, 0);

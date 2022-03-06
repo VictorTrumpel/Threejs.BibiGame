@@ -15,7 +15,12 @@ export class MovementBody extends PhysicalBody {
     super(physique);
   }
 
-  public moveToPoint(point: Vector3, onStart?: () => void, onStop?: () => void) {
+  public moveToPoint(
+    point: Vector3,
+    onStart?: (tween: TWEEN.Tween<any>) => void,
+    onStop?: (tween: TWEEN.Tween<any>) => void,
+    onUpdate?: (tween: TWEEN.Tween<any>) => void
+  ) {
     const { physique } = this;
     const { x, z } = point;
 
@@ -28,8 +33,9 @@ export class MovementBody extends PhysicalBody {
     positionTween
       .to({ x, z }, this.getMovementTime(point, physique.position))
       .start()
-      .onStart(() => onStart?.())
-      .onComplete(() => onStop?.());
+      .onUpdate(() => onUpdate?.(positionTween))
+      .onStart(() => onStart?.(positionTween))
+      .onComplete(() => onStop?.(positionTween));
 
     this.positionTween = positionTween;
   }

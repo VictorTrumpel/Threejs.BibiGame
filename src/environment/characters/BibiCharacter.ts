@@ -1,4 +1,4 @@
-import { TextureLoader, AnimationAction, AnimationMixer, Vector3 } from 'three';
+import { TextureLoader, AnimationAction, AnimationMixer, Vector3, Object3D } from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { raycaster } from '../../main';
 
@@ -12,6 +12,8 @@ import { Body } from 'objects/Body';
 import { setAnimationWeight } from '../../helpers/setAnimationWeight';
 import { getMouse2DCords } from '../../helpers/getMouse2DCords';
 import { BodyUserData } from '../bodyes/PhysicalBody';
+import * as TWEEN from '@tweenjs/tween.js';
+import { getPointsLength } from '../../helpers/getPointsLength';
 
 export enum BibiActionCode {
   // eslint-disable-next-line no-unused-vars
@@ -22,6 +24,7 @@ export enum BibiActionCode {
 
 export type BibiUserData = BodyUserData & {
   isMoving?: boolean;
+  range: number;
 };
 
 class BibiCharacter extends MovementBody {
@@ -35,6 +38,7 @@ class BibiCharacter extends MovementBody {
     this.mixer = new AnimationMixer(this.skin);
     this.userData = {
       objectType: 'BibiCharacter',
+      range: 1.5,
     };
   }
 
@@ -99,6 +103,50 @@ class BibiCharacter extends MovementBody {
     });
   }
 
+  public mouseEvent(e: MouseEvent) {
+    const mouse2D = getMouse2DCords(e);
+
+    raycaster.setFromCamera(mouse2D, world.colorWorld.camera);
+    const [intersect] = raycaster.intersectObjects(world.colorWorld.scene.children, false);
+    const { object, point } = intersect || {};
+
+    if (e.button === 0) this.moveEvent(object, point);
+    if (e.button === 2) this.fightEvent(object);
+  }
+
+  private fightEvent(object: Object3D) {
+    if (!object?.userData?.isEnemy) return;
+
+    const { position } = object;
+    const { skin, userData } = this;
+
+    if (getPointsLength(position, skin.position) <= userData.range) return;
+
+    super.moveToPoint(
+      new Vector3(position.x, 0, position.z),
+      () => {
+        this.run();
+        this.userData.isMoving = true;
+      },
+      () => {
+        this.stop();
+        this.userData.isMoving = false;
+      },
+      (tween) => {
+        if (!(getPointsLength(position, skin.position) <= userData.range)) return;
+        tween.stop();
+        this.stop();
+        this.userData.isMoving = false;
+      }
+    );
+  }
+
+  private moveEvent(object: Object3D, point: Vector3) {
+    if (object?.userData?.isGround) {
+      this.moveToPoint(point);
+    }
+  }
+
   public moveToPoint(point: Vector3) {
     super.moveToPoint(
       point,
@@ -111,20 +159,6 @@ class BibiCharacter extends MovementBody {
         this.userData.isMoving = false;
       }
     );
-  }
-
-  public moveEvent(e: MouseEvent) {
-    if (e.button !== 0) return;
-
-    const mouse2D = getMouse2DCords(e);
-
-    raycaster.setFromCamera(mouse2D, world.colorWorld.camera);
-    const [intersect] = raycaster.intersectObjects(world.colorWorld.scene.children, false);
-    const { object, point } = intersect || {};
-
-    if (object?.userData?.isGround) {
-      this.moveToPoint(point);
-    }
   }
 
   public update(timer: number) {

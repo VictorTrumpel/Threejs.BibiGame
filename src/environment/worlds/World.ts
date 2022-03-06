@@ -28,8 +28,6 @@ export class World {
     colorWorld.scene.add(skin);
     physicsWorld.addBody(physique);
     worldBodies.push(body);
-
-    console.log(worldBodies);
   }
 
   start(): void {
@@ -41,7 +39,7 @@ export class World {
 
     const time = clock.getDelta();
 
-    physicsWorld.step(time);
+    physicsWorld.fixedStep();
     colorWorld.render();
 
     TWEEN.update();
@@ -49,7 +47,7 @@ export class World {
     worldBodies.forEach((body) => body.update(time));
 
     // For DEBUG
-    // cannonDebug.update();
+    cannonDebug.update();
 
     // HOLD LOOP
     requestAnimationFrame(this.loop.bind(this));

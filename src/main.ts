@@ -1,4 +1,5 @@
 import './loaders/bibi';
+import './loaders/enemy';
 
 import '../models/textures/Warrior_marmoset_Base_Color.png';
 import { Ground } from './environment/common/Ground';
@@ -20,9 +21,9 @@ window.onload = () => {
   const sphereShape = new CANNON.Sphere(0.4);
   const sphereBody = new CANNON.Body({
     mass: 5,
-    position: new CANNON.Vec3(1, 2, 1),
+    position: new CANNON.Vec3(2, 2, 2),
+    shape: sphereShape,
   });
-  sphereBody.addShape(sphereShape);
   world.physicsWorld.addBody(sphereBody);
 
   world.addBody(ground);

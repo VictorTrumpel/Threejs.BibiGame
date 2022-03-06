@@ -11,9 +11,8 @@ export class Wall extends PhysicalBody {
     plane.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI);
 
     const groundBody = new CANNON.Body({
-      mass: 5,
-      type: Body.KINEMATIC,
-      position: new CANNON.Vec3(0, 0, -3),
+      type: Body.STATIC,
+      position: new CANNON.Vec3(0, 0, 10),
     });
     const groundShape = new CANNON.Plane();
     groundBody.addShape(groundShape);
