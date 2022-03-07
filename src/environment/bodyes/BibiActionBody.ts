@@ -1,12 +1,13 @@
 import { BibiBody } from './BibiBody';
 import { setAnimationWeight } from '../../helpers/setAnimationWeight';
-import { Object3D } from 'three';
 import { getPointsLength } from '../../helpers/getPointsLength';
+import { Vector3 } from 'three';
 
 export class BibiActionBody extends BibiBody {
   private isRunning?: boolean;
+  private isAttacking?: boolean;
 
-  public run() {
+  private run() {
     if (this.isRunning) return;
     const { run, idle } = this.actions();
 
@@ -17,27 +18,21 @@ export class BibiActionBody extends BibiBody {
     this.isRunning = true;
   }
 
-  public stop() {
+  private stop() {
     if (!this.isRunning) return;
 
     const { run, idle } = this.actions();
-
-    setAnimationWeight(idle, 1);
 
     run.crossFadeTo(idle, 0.3, true);
 
     this.isRunning = false;
   }
 
-  public attack() {
+  private alwaysLookAtEnemy() {}
+
+  private attack() {
     const { charge } = this.userData;
     const { attack, idle } = this.actions();
-
-    if (!charge?.userData.isEnemy) {
-      setAnimationWeight(attack, 0);
-      setAnimationWeight(idle, 1);
-      return;
-    }
 
     const { position: targetPosition } = charge || {};
     const { position: bodyPosition } = this.skin;
@@ -45,12 +40,27 @@ export class BibiActionBody extends BibiBody {
     const length = getPointsLength(targetPosition, bodyPosition);
 
     if (length > this.range) {
-      setAnimationWeight(attack, 0);
+      this.stopAttack();
       return;
     }
 
+    if (this.isAttacking) return;
+
     setAnimationWeight(attack, 1);
     setAnimationWeight(idle, 0);
+
+    this.isAttacking = true;
+  }
+
+  private stopAttack() {
+    if (!this.isAttacking) return;
+
+    const { attack, idle } = this.actions();
+
+    setAnimationWeight(attack, 0);
+    setAnimationWeight(idle, 1);
+
+    this.isAttacking = false;
   }
 
   update(timer: number) {
@@ -59,6 +69,6 @@ export class BibiActionBody extends BibiBody {
 
     userData.isMoving ? this.run() : this.stop();
 
-    this.attack();
+    userData.isCharged ? this.attack() : this.stopAttack();
   }
 }
