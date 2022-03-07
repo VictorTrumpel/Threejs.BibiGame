@@ -9,8 +9,6 @@ export type EnemyUserData = BodyUserData & {
 };
 
 class EnemyCharacter extends MovementBody {
-  private userData: EnemyUserData;
-
   constructor(physique: Body) {
     super(physique);
     this.userData = {

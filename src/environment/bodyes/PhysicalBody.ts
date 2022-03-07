@@ -11,6 +11,7 @@ export type BodyUserData = {
 export class PhysicalBody {
   public skin: Group | Mesh;
   public physique: Body;
+  public userData: any = {};
 
   constructor(physique: Body, skin?: Skin) {
     this.physique = physique;
@@ -25,6 +26,7 @@ export class PhysicalBody {
 
   // eslint-disable-next-line no-unused-vars
   public update(timer: number) {
+    this.skin.userData = { ...this.skin.userData, ...this.userData };
     this.bindSkinToPhysics();
   }
 }
