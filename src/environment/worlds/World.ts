@@ -47,7 +47,7 @@ export class World {
     worldBodies.forEach((body) => body.update(time));
 
     // For DEBUG
-    cannonDebug.update();
+    // cannonDebug.update();
 
     // HOLD LOOP
     requestAnimationFrame(this.loop.bind(this));
