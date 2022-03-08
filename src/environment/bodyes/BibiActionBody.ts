@@ -1,7 +1,6 @@
 import { BibiBody } from './BibiBody';
 import { setAnimationWeight } from '../../helpers/setAnimationWeight';
 import { getPointsLength } from '../../helpers/getPointsLength';
-import { Vector3 } from 'three';
 
 export class BibiActionBody extends BibiBody {
   private isRunning?: boolean;
@@ -27,8 +26,6 @@ export class BibiActionBody extends BibiBody {
 
     this.isRunning = false;
   }
-
-  private alwaysLookAtEnemy() {}
 
   private attack() {
     const { charge } = this.userData;
