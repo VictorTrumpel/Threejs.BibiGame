@@ -35,7 +35,7 @@ export class World {
   }
 
   private loop(): void {
-    const { clock, worldBodies, cannonDebug, physicsWorld, colorWorld } = this;
+    const { clock, worldBodies, cannonDebug, physicsWorld, colorWorld, orbitControl } = this;
 
     const time = clock.getDelta();
 
@@ -48,6 +48,7 @@ export class World {
 
     // For DEBUG
     // cannonDebug.update();
+    // orbitControl.update();
 
     // HOLD LOOP
     requestAnimationFrame(this.loop.bind(this));

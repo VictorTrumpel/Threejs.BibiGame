@@ -6,3 +6,4 @@ declare module '*.jpg';
 declare module '*.fbx';
 declare module '*.dae';
 declare module '*.css';
+declare module '*.tsx';
