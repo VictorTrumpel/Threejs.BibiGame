@@ -22,3 +22,5 @@ world.colorWorld.add(light);
 window.onload = () => {
   world.start();
 };
+
+document.oncontextmenu = () => false;
