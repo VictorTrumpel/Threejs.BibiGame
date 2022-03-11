@@ -10,4 +10,5 @@ const bibi = new BibiCharacter(BibiPhysics);
 
   // CONTROLLERS
   window.addEventListener('mousedown', bibi.mouseEvent.bind(bibi), false);
+  window.addEventListener('keydown', bibi.testOnKeyDownEvent.bind(bibi), false);
 })();

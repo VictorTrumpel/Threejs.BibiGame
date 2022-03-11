@@ -31,6 +31,12 @@ class BibiCharacter extends BibiActionBody {
     if (!object?.userData?.isGround) return;
     this.moveToPoint(point);
   }
+
+  public testOnKeyDownEvent(e: KeyboardEvent) {
+    if (e.key === '1') {
+      this.attack();
+    }
+  }
 }
 
 export default BibiCharacter;

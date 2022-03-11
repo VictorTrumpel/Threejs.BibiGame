@@ -27,8 +27,13 @@ export class BibiActionBody extends BibiBody {
     this.isRunning = false;
   }
 
-  private attack() {
+  public attack() {
+    if (this.isAttacking) return;
+
     const { charge } = this.userData;
+
+    if (!charge?.userData?.isEnemy) return;
+
     const { attack, idle } = this.actions();
 
     const { position: targetPosition } = charge || {};
@@ -36,26 +41,28 @@ export class BibiActionBody extends BibiBody {
 
     const length = getPointsLength(targetPosition, bodyPosition);
 
-    if (length > this.range) {
-      this.stopAttack();
-      return;
-    }
+    if (length > this.range) return;
 
-    if (this.isAttacking) return;
+    // @ts-ignore
+    const duration = attack._clip.duration;
+
+    idle.crossFadeTo(attack, 0.5, true);
 
     setAnimationWeight(attack, 1);
-    setAnimationWeight(idle, 0);
 
     this.isAttacking = true;
+
+    setTimeout(() => this.stopAttack(), duration * 1000);
   }
 
   private stopAttack() {
-    if (!this.isAttacking) return;
-
     const { attack, idle } = this.actions();
 
-    setAnimationWeight(attack, 0);
+    attack.time = 0;
+
     setAnimationWeight(idle, 1);
+
+    attack.crossFadeTo(idle, 0.5, true);
 
     this.isAttacking = false;
   }
@@ -65,7 +72,5 @@ export class BibiActionBody extends BibiBody {
     const { userData } = this;
 
     userData.isMoving ? this.run() : this.stop();
-
-    userData.isCharged ? this.attack() : this.stopAttack();
   }
 }

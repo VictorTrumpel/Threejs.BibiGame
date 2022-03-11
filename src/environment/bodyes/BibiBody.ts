@@ -37,6 +37,10 @@ export class BibiBody extends MovementBody {
     const idle = this.animations[BibiActionCode.Idle];
     const attack = this.animations[BibiActionCode.Attack];
 
+    attack.time = 0;
+    attack.zeroSlopeAtEnd = false;
+    attack.zeroSlopeAtStart = false;
+
     return { run, idle, attack };
   }
 
