@@ -8,8 +8,8 @@ import { getRaycasterIntersects } from '../../helpers/getRaycasterIntersects';
 class BibiCharacter extends BibiActionBody {
   readonly scale = 0.0015;
 
-  constructor(physique: Body) {
-    super(physique);
+  constructor(physique: Body, name: string) {
+    super(physique, name);
   }
 
   public mouseEvent(e: MouseEvent) {

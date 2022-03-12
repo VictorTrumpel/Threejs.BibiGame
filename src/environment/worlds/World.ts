@@ -6,7 +6,7 @@ import CannonDebugRenderer from '../../../utils/cannonDebugRenderer';
 import * as TWEEN from '@tweenjs/tween.js';
 import { PhysicalBody } from '../bodyes/PhysicalBody';
 
-export class World {
+class World {
   public colorWorld: ColorWorld = new ColorWorld();
   public physicsWorld: PhysicsWorld = new PhysicsWorld();
   private clock: Clock = new Clock();
@@ -54,4 +54,6 @@ export class World {
   }
 }
 
-export const world = new World();
+const world = new World();
+
+export default world;

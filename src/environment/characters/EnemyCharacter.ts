@@ -6,14 +6,17 @@ import { BoxGeometry, MeshBasicMaterial, Mesh, Quaternion } from 'three';
 export type EnemyUserData = BodyUserData & {
   objectType: string;
   isEnemy: boolean;
+  health: number;
 };
 
 class EnemyCharacter extends MovementBody {
-  constructor(physique: Body) {
-    super(physique);
+  constructor(physique: Body, name: string) {
+    super(physique, name);
     this.userData = {
+      ...this.userData,
       objectType: 'EnemyCharacter',
       isEnemy: true,
+      health: 20,
     };
   }
 

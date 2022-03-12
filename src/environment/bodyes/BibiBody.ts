@@ -27,8 +27,8 @@ export class BibiBody extends MovementBody {
 
   public animations: AnimationAction[] = [];
 
-  constructor(physique: Body) {
-    super(physique);
+  constructor(physique: Body, name: string) {
+    super(physique, name);
     this.mixer = new AnimationMixer(this.skin);
   }
 

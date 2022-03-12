@@ -11,6 +11,21 @@ type MoveToPointCallbacks = Partial<{
   onUpdate: (tween: TWEEN.Tween<any>) => void;
 }>;
 
+export type Charge = {
+  userData: MovementUserData;
+  position: Vector3;
+};
+
+type MovementUserData = {
+  id: string;
+  objectType?: string;
+  isEnemy?: boolean;
+  health: number;
+  isCharged: boolean;
+  isMoving: boolean;
+  charge: Charge | null;
+};
+
 export class MovementBody extends PhysicalBody {
   readonly TIME_RATIO = 1000;
   readonly speed: number = 3;
@@ -19,11 +34,21 @@ export class MovementBody extends PhysicalBody {
   private targetQuaternion?: Quaternion;
   private positionTween?: TWEEN.Tween<any>;
 
-  constructor(physique: Body) {
+  public userData: MovementUserData;
+
+  constructor(physique: Body, name: string) {
     super(physique);
+
+    this.userData = {
+      id: name,
+      isCharged: false,
+      isMoving: false,
+      charge: null,
+      health: 20,
+    };
   }
 
-  public moveToPoint(point: Vector3, callbacks?: MoveToPointCallbacks) {
+  protected moveToPoint(point: Vector3, callbacks?: MoveToPointCallbacks) {
     const { onStart, onStop, onUpdate } = callbacks || {};
     const { physique } = this;
     const { x, z } = point;
@@ -50,7 +75,7 @@ export class MovementBody extends PhysicalBody {
     this.positionTween = positionTween;
   }
 
-  public moveToTarget(target: Object3D) {
+  protected moveToTarget(target: Object3D) {
     if (!target.userData.isEnemy) {
       this.userData.isCharged = false;
       this.userData.charge = null;
@@ -58,7 +83,7 @@ export class MovementBody extends PhysicalBody {
     }
 
     this.userData.isCharged = true;
-    this.userData.charge = target;
+    this.userData.charge = target as unknown as Charge;
 
     const { position: targetPosition } = target;
     const { position: bodyPosition } = this.skin;
@@ -77,7 +102,7 @@ export class MovementBody extends PhysicalBody {
     });
   }
 
-  public smoothLookAt(point: Vector3) {
+  protected smoothLookAt(point: Vector3) {
     const { skin } = this;
 
     const mock = new Object3D();

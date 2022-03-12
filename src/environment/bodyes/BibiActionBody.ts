@@ -1,6 +1,7 @@
 import { BibiBody } from './BibiBody';
 import { setAnimationWeight } from '../../helpers/setAnimationWeight';
 import { getPointsLength } from '../../helpers/getPointsLength';
+import fightWatcher from '../fight/FightWatcher';
 
 export class BibiActionBody extends BibiBody {
   private isRunning?: boolean;
@@ -22,9 +23,18 @@ export class BibiActionBody extends BibiBody {
 
     const { run, idle } = this.actions();
 
+    setAnimationWeight(idle, 1);
+
     run.crossFadeTo(idle, 0.3, true);
 
     this.isRunning = false;
+  }
+
+  private hit() {
+    const { charge } = this.userData;
+    if (!charge) return;
+
+    fightWatcher.dispatch(charge.userData.id, -1);
   }
 
   public attack() {
@@ -51,6 +61,8 @@ export class BibiActionBody extends BibiBody {
     setAnimationWeight(attack, 1);
 
     this.isAttacking = true;
+
+    setTimeout(() => this.hit(), (duration / 2) * 1000);
 
     setTimeout(() => this.stopAttack(), duration * 1000);
   }
