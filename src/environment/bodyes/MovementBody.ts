@@ -44,7 +44,7 @@ export class MovementBody extends PhysicalBody {
       isCharged: false,
       isMoving: false,
       charge: null,
-      health: 20,
+      health: 1,
     };
   }
 

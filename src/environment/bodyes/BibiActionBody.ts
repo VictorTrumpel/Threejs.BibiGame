@@ -34,7 +34,7 @@ export class BibiActionBody extends BibiBody {
     const { charge } = this.userData;
     if (!charge) return;
 
-    fightWatcher.dispatch(charge.userData.id, -1);
+    fightWatcher.dispatch(charge.userData.id, -0.1);
   }
 
   public attack() {
