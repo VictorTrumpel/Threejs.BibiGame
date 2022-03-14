@@ -11,7 +11,7 @@ type MoveToPointCallbacks = Partial<{
   onUpdate: (tween: TWEEN.Tween<any>) => void;
 }>;
 
-export type Charge = {
+export type Charge = Object3D & {
   userData: MovementUserData;
   position: Vector3;
 };

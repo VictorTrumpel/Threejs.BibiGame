@@ -36,6 +36,7 @@ class EnemyCharacter extends MovementBody {
 
   private updateHealthBar() {
     if (this.healthBar.scale.x === this.userData.health) return;
+    if (this.healthBar.scale.x <= 0) return;
     this.healthBar.scale.x = this.userData.health;
   }
 

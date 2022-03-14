@@ -2,10 +2,12 @@ import { BibiBody } from './BibiBody';
 import { setAnimationWeight } from '../../helpers/setAnimationWeight';
 import { getPointsLength } from '../../helpers/getPointsLength';
 import fightWatcher from '../fight/FightWatcher';
+import { aim, Aim } from '../common/Aim';
 
 export class BibiActionBody extends BibiBody {
   private isRunning?: boolean;
   private isAttacking?: boolean;
+  private aim: Aim = aim;
 
   private run() {
     if (this.isRunning) return;
@@ -79,9 +81,24 @@ export class BibiActionBody extends BibiBody {
     this.isAttacking = false;
   }
 
+  private highlightTarget() {
+    const { charge } = this.userData;
+
+    if (!charge) {
+      this.aim.visible = false;
+      return;
+    }
+
+    this.aim.visible = true;
+    this.aim.position.z = charge.position.z;
+    this.aim.position.x = charge.position.x;
+  }
+
   update(timer: number) {
     super.update(timer);
     const { userData } = this;
+
+    this.highlightTarget();
 
     userData.isMoving ? this.run() : this.stop();
   }
