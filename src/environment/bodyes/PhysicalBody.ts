@@ -24,7 +24,6 @@ export class PhysicalBody {
     skin.position.copy(new Vector3(...Object.values(physique.position)));
   }
 
-  // eslint-disable-next-line no-unused-vars
   public update(timer: number) {
     this.skin.userData = { ...this.skin.userData, ...this.userData };
     this.bindSkinToPhysics();

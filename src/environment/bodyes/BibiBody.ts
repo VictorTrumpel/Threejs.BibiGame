@@ -1,11 +1,13 @@
+import bibiModel from '../../../assets/models/bibi_gamer_anim.fbx';
+import bibiTexture from '../../../assets/textures/bibi_gamer_tex.png';
+
 import { MovementBody } from './MovementBody';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import bibiModel from '../../../models/bibi_gamer_anim.fbx';
 import { AnimationAction, AnimationMixer, TextureLoader } from 'three';
-import bibiTexture from '../../../models/bibi_gamer_tex.png';
-import { Body } from 'objects/Body';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+
 import { setAnimationWeight } from '../../helpers/setAnimationWeight';
-import { BodyUserData } from './PhysicalBody';
+import { IBody } from './IBody';
+import { Body } from 'objects/Body';
 
 export enum BibiActionCode {
   // eslint-disable-next-line no-unused-vars
@@ -15,24 +17,18 @@ export enum BibiActionCode {
   Attack = 6,
 }
 
-export type BibiUserData = BodyUserData & {
-  isMoving?: boolean;
-  isFighting?: boolean;
-  range: number;
-};
-
-export class BibiBody extends MovementBody {
+export class BibiBody extends MovementBody implements IBody {
   private mixer: AnimationMixer;
   readonly scale = 0.0015;
 
-  public animations: AnimationAction[] = [];
+  protected animations: AnimationAction[] = [];
 
   constructor(physique: Body, name: string) {
     super(physique, name);
     this.mixer = new AnimationMixer(this.skin);
   }
 
-  public actions() {
+  protected actions() {
     const run = this.animations[BibiActionCode.Run];
     const idle = this.animations[BibiActionCode.Idle];
     const attack = this.animations[BibiActionCode.Attack];

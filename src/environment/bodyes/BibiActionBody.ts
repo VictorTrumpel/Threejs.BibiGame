@@ -94,7 +94,7 @@ export class BibiActionBody extends BibiBody {
     this.aim.position.x = charge.position.x;
   }
 
-  update(timer: number) {
+  public update(timer: number) {
     super.update(timer);
     const { userData } = this;
 

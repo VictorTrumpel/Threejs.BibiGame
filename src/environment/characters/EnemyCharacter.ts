@@ -1,10 +1,10 @@
 import { MovementBody } from '../bodyes/MovementBody';
 import { Body } from 'objects/Body';
-import { BoxGeometry, MeshBasicMaterial, Mesh, Quaternion, PlaneGeometry, Object3D } from 'three';
-import * as THREE from 'three';
+import { BoxGeometry, MeshBasicMaterial, Mesh, Quaternion } from 'three';
+import { HealthBar } from '../common/HealthBar';
 
 class EnemyCharacter extends MovementBody {
-  private healthBar: Object3D;
+  private healthBar: HealthBar = new HealthBar();
 
   constructor(physique: Body, name: string) {
     super(physique, name);
@@ -13,7 +13,6 @@ class EnemyCharacter extends MovementBody {
       objectType: 'EnemyCharacter',
       isEnemy: true,
     };
-    this.healthBar = this.generateHealthBar();
   }
 
   public loadModel() {
@@ -23,15 +22,8 @@ class EnemyCharacter extends MovementBody {
     this.skin.userData = this.userData;
 
     this.skin.add(this.healthBar);
-  }
 
-  private generateHealthBar(): Object3D {
-    const healthBarGeom = new PlaneGeometry(1, 0.2);
-    const healthBarMaterial = new MeshBasicMaterial({ color: 'red', side: THREE.DoubleSide });
-    const healthBar = new Mesh(healthBarGeom, healthBarMaterial);
-    healthBar.position.y = 1.3;
-    healthBar.scale.x = 1;
-    return healthBar;
+    this.healthBar.position.y = 1.2;
   }
 
   private updateHealthBar() {
