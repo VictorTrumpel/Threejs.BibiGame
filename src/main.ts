@@ -1,7 +1,11 @@
+import * as THREE from 'three';
+
+THREE.Cache.enabled = true;
+
 import '../interface';
 import '../interface/index.scss';
 
-import './loaders/bibi';
+// import './loaders/bibi';
 import './loaders/enemy';
 import './loaders/tigro';
 
