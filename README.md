@@ -12,6 +12,7 @@ Adventures of Bibi on THREE.js
 Создание интерфейса игры через React App.
 Реализация бэкенда на Node.js
 
+
 ## Управление:
    перемещение - ЛКМ по земле (на данный момент белая плоскость);
 
@@ -20,6 +21,9 @@ Adventures of Bibi on THREE.js
    атака цели - клавиша "1" на клавиатуре
 
 Если вы хотите поучаствовать в развитии проекта - пишите на почту, указанную в bio
+
+![image](https://user-images.githubusercontent.com/59663275/158761824-aa402b2e-fe72-4568-bbc9-e2ce8146019d.png)
+
 
 ## Installing dependencies
 
