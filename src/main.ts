@@ -7,7 +7,6 @@ import '../interface/index.scss';
 
 import './loaders/bibi';
 import './loaders/enemy';
-// import './loaders/tigro';
 
 import { Ground } from './environment/common/Ground';
 import { Light } from './environment/common/Light';
