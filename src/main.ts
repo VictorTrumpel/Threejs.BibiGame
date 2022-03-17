@@ -8,6 +8,9 @@ import './loaders/tigro';
 import { Ground } from './environment/common/Ground';
 import { Light } from './environment/common/Light';
 import world from './environment/worlds/World';
+import * as THREE from 'three';
+
+THREE.Cache.enabled = true;
 
 import { Raycaster } from 'three';
 

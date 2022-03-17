@@ -20,16 +20,14 @@ export class TigroBody extends MovementBody implements IBody {
 
   public async loadModel() {
     const { scale } = this;
-    console.log('gds');
 
     const tigroFbx = await new FBXLoader().loadAsync(tigroModel);
     const texture = await new TextureLoader().loadAsync(tigroTexture);
+    this.mixer = new AnimationMixer(tigroFbx);
 
     console.log(tigroFbx);
 
     tigroFbx.scale.set(scale, scale, scale);
-
-    this.mixer = new AnimationMixer(tigroFbx);
 
     this.skin = tigroFbx;
   }

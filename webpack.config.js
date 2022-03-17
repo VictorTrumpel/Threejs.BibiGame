@@ -1,3 +1,4 @@
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const path = require('path');
 const miniCss = require('mini-css-extract-plugin');
 
@@ -47,6 +48,7 @@ module.exports = {
     new miniCss({
       filename: 'style.css',
     }),
+    new ForkTsCheckerWebpackPlugin(),
   ],
   watchOptions: {
     ignored: /node_modules/,

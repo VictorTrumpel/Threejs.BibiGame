@@ -55,6 +55,8 @@ export class BibiBody extends MovementBody implements IBody {
     const texture = await new TextureLoader().loadAsync(bibiTexture);
     this.mixer = new AnimationMixer(bibiFBX);
 
+    console.log(bibiFBX);
+
     bibiFBX.scale.set(scale, scale, scale);
 
     this.skin = bibiFBX;
