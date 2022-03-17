@@ -12,6 +12,11 @@ module.exports = {
       directory: __dirname,
     },
   },
+  cache: {
+    type: 'filesystem',
+    allowCollectingMemory: true,
+    cacheDirectory: path.resolve(__dirname, '.temp_cache'),
+  },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),

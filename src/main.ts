@@ -1,14 +1,17 @@
+import * as THREE from 'three';
+
+THREE.Cache.enabled = true;
+
 import '../interface';
 import '../interface/index.scss';
 
 import './loaders/bibi';
 import './loaders/enemy';
-import './loaders/tigro';
+// import './loaders/tigro';
 
 import { Ground } from './environment/common/Ground';
 import { Light } from './environment/common/Light';
 import world from './environment/worlds/World';
-import * as THREE from 'three';
 
 THREE.Cache.enabled = true;
 
