@@ -1,5 +1,7 @@
 # THREE.js BibiCharacter Controller
 
+Three.js + Typescript
+
 Adventures of Bibi on THREE.js
 
 Данный проект является учебным проектом по созданию игры при помощи THREE.js.
